@@ -1,0 +1,258 @@
+\documentclass[letterpaper, landscape, 11pt]{letter} 
+\usepackage{multicol}
+\usepackage{xltxtra}
+\usepackage[left=0.25in, right=0.25in, top=0.5in, bottom=0.4in]{geometry}
+\usepackage{setspace}
+\usepackage{parskip}
+
+% Begin what's needed to make a dagger footnote symbol
+\makeatletter
+\newcommand*{\myfnsymbolsingle}[1]{%
+  \ensuremath{%
+    \ifcase#1% 0
+    \or % 1
+      \dagger   
+    \or % 2
+      \dagger
+    \or % 3  
+      \ddagger
+    \or % 4   
+      \mathsection
+    \or % 5
+      \mathparagraph
+    \else % >= 6
+      \@ctrerr  
+    \fi
+  }%   
+}   
+\makeatother
+
+\newcommand*{\myfnsymbol}[1]{%
+  \myfnsymbolsingle{\value{#1}}%
+}
+
+% remove upper boundary by multiplying the symbols if needed
+\usepackage{alphalph}
+\newalphalph{\myfnsymbolmult}[mult]{\myfnsymbolsingle}{}
+
+\renewcommand*{\thefootnote}{%
+  \myfnsymbolmult{\value{footnote}}%
+}
+
+% End what's needed to make a dagger footnote symbol
+
+\newcommand\textalign[2][]{%
+\ifx#1l\relax
+  \makebox[0pt][l]{#2}%
+\else
+  \ifx#1r\relax
+    \makebox[0pt][r]{#2}%
+  \else  
+    \ifx#1c\relax
+      \makebox[0pt][c]{#2}%
+    \fi\fi\fi
+}
+
+\begin{document}
+\setlength{\parskip}{0pt}
+\setmainfont{Book Antiqua}
+\pagenumbering{gobble}
+\noindent
+\setlength{\columnsep}{0.6in}
+\begin{multicols}{2}
+
+% =======================================================
+\begin{centering}
+\huge{Lord's Day Worship}\par
+\vspace{6pt}
+\large{<<DATE>>}\par
+\vspace{-3pt}
+\hrulefill\par
+\vspace{6pt}
+\setmainfont{BellGothic BT}
+\large{P}\normalsize{REPARATION}\large{ F}\normalsize{OR}\large{ T}\normalsize{HE}\large{ W}\normalsize{ORD}\par
+\setmainfont{Book Antiqua}
+\end{centering}
+% =======================================================
+
+\vspace{3pt}
+Silent Preparation\par
+\vspace{8pt}
+Greetings\par
+
+\begin{centering}
+\vspace{-3pt}
+\hrulefill
+\end{centering}
+
+\vspace{6pt}
+\begin{tabbing}
+\=\hspace*{.5\linewidth}\=\hspace{.5\linewidth}\=\kill \par
+\> \textalign[l]{Call to Worship} \>  \> \textalign[r]{\emph{<<CALLER-TO-WORSHIP>>}} \par
+\end{tabbing}
+
+\vspace{8pt}
+Prayer of Adoration and Invocation\par
+
+\vspace{8pt}
+\begin{tabbing}
+\=\hspace*{.5\linewidth}\=\hspace{.5\linewidth}\=\kill \par
+\> \textalign[l]{*Hymn of Praise: <<HYMN-PRAISE-NUMBER>>} \>  \> \textalign[r]{\emph{<<HYMN-PRAISE-NAME>>}} \par
+\end{tabbing}
+
+\vspace{8pt}
+\begin{tabbing}
+\=\hspace*{.5\linewidth}\=\hspace{.5\linewidth}\=\kill \par
+\> \textalign[l]{Corporate Confession of Sin} \>  \> \textalign[r]{\emph{<<CONFESSION-SIN-ATTRIBUTION>>}} \par
+\end{tabbing}
+
+% =======================================================
+\vspace{6pt}
+\vbox to 3.35in
+{
+\leftskip0.05in\relax
+\rightskip0.05in\relax
+\setmainfont{BellGothic BT}
+<<MAKE-CS-SMALL>>
+<<CONFESSION-SIN>>
+\setmainfont{Book Antiqua}
+\leftskip0in\relax
+\rightskip0in\relax
+}
+
+% =======================================================
+\vspace{8pt}
+Silent Confession of Sin\par
+\vspace{8pt}
+Assurance of Pardon\par
+
+% =======================================================
+
+\vspace{8pt}
+\begin{tabbing}
+\=\hspace*{.5\linewidth}\=\hspace{.5\linewidth}\=\kill \par
+\> \textalign[l]{The First Lesson} \>  \> \textalign[r]{\emph{<<FIRST-LESSON>>}} \par
+\end{tabbing}
+
+% =======================================================
+
+\vspace{8pt}
+\begin{tabbing}
+\=\hspace*{.5\linewidth}\=\hspace{.5\linewidth}\=\kill \par
+\> \textalign[l]{*Psalm of the Month: <<PSALM-OF-MONTH-NUMBER>>} \>  \> \textalign[r]{\emph{<<PSALM-OF-MONTH-NAME>>}} \\
+\>  \>  \> \textalign[r]{Blue \emph{ARP Psalter}}
+\end{tabbing}
+
+% =======================================================
+\columnbreak
+% =======================================================
+
+\begin{centering}
+\setmainfont{BellGothic BT}
+\large{P}\normalsize{ROCLAMATION}\large{ O}\normalsize{F}\large{ T}\normalsize{HE}\large{ W}\normalsize{ORD}\par
+\setmainfont{Book Antiqua}
+\end{centering}
+
+\vspace{3pt}
+\begin{tabbing}
+\=\hspace*{.5\linewidth}\=\hspace{.5\linewidth}\=\kill \par
+\> \textalign[l]{The Second Lesson} \> \> \textalign[r]{\emph{<<SECOND-LESSON>>}} \par
+\end{tabbing}
+
+\vspace{8pt}
+Prayer for Illumination\par
+
+\vspace{8pt}
+\begin{tabbing}
+\=\hspace*{.5\linewidth}\=\hspace{.5\linewidth}\=\kill \par
+\> \textalign[l]{Sermon} \> \> \textalign[r]{\emph{<<PREACHER>>}} \par
+\end{tabbing}
+
+\begin{centering}
+\vspace{-3pt}
+\hrulefill\par
+\vspace{6pt}\setmainfont{BellGothic BT}
+\large{R}\normalsize{ESPONSE}\large{ T}\normalsize{O}\large{ T}\normalsize{HE}\large{ W}\normalsize{ORD}\par
+\setmainfont{Book Antiqua}
+\end{centering}
+
+\vspace{4pt}
+\begin{tabbing}
+\=\hspace*{.5\linewidth}\=\hspace{.5\linewidth}\=\kill \par
+\> \textalign[l]{*Hymn of Response: <<HYMN-RESPONSE-NUMBER>>} \> \> \textalign[r]{\emph{<<HYMN-RESPONSE-NAME>>}} \par
+\end{tabbing}
+
+%NO-NICENE-CREED\vspace{8pt}
+%NICENE-CREED\vspace{5pt}
+Prayer of Intercession and the Lord's Prayer\par
+
+%NO-NICENE-CREED\vspace{8pt}
+%NICENE-CREED\vspace{5pt}
+The Collection\par
+\leftskip0.2in\relax
+\setmainfont{Bell Gothic Italic W08 Regular}
+\emph{\footnotesize{*Gloria Patri: 735}}\par
+\emph{\footnotesize{*Prayer of Thanksgiving \& Dedication}}\par
+\leftskip0in\relax
+\setmainfont{Book Antiqua}
+
+%NO-NICENE-CREED\vspace{8pt}
+%NICENE-CREED\vspace{5pt}
+\begin{tabbing}
+\=\hspace*{.5\linewidth}\=\hspace{.5\linewidth}\=\kill \par
+\> \textalign[l]{*Confession of Faith} \>  \> \textalign[r]{\emph{<<CONFESSION-FAITH-ATTRIBUTION>>}} \par
+\end{tabbing}
+
+% =======================================================
+%NO-NICENE-CREED\vspace{6pt}
+%NICENE-CREED\vspace{3pt}
+
+%NO-NICENE-CREED\vbox to 2.7in
+%NICENE-CREED\vbox to 3in
+{
+\leftskip0.07in\relax
+\rightskip0.05in\relax
+\setmainfont{BellGothic BT}
+<<MAKE-CF-SMALL>>
+<<CONFESSION-FAITH>>
+\setmainfont{Book Antiqua}
+\leftskip0in\relax
+\rightskip0in\relax
+}
+
+% =======================================================
+
+\footnotemark{Celebration of the Lord's Supper}\par
+\leftskip0.2in\relax
+\setmainfont{Bell Gothic Italic W08 Regular}
+\emph{\footnotesize{Words of Institution}}\\
+\emph{\footnotesize{Distribution of the Elements}}\par
+\leftskip0in\relax
+\setmainfont{Book Antiqua}
+
+%NO-NICENE-CREED\vspace{8pt}
+%NICENE-CREED\vspace{5pt}
+*Doxology: 733
+
+%NO-NICENE-CREED\vspace{8pt}
+%NICENE-CREED\vspace{5pt}
+*Benediction
+
+%NO-NICENE-CREED\vspace{8pt}
+%NICENE-CREED\vspace{5pt}
+\begin{tabbing}
+\=\hspace*{.5\linewidth}\=\hspace{.5\linewidth}\=\kill \par
+\> \textalign[l]{*Congregational Response: 730} \>  \> \textalign[r]{\emph{Choral Benediction}} \par
+\end{tabbing}
+
+\begin{centering}
+\vspace{-5pt}
+\hrulefill
+\end{centering}
+
+\setmainfont{Bell Gothic Italic W08 Regular}
+\emph{\footnotesize{*Please stand}}\par
+\emph{\footnotesize{\footnotemark{The outer circle of each tray contains grape juice. The inner circles contain wine.}}}\par
+
+\end{multicols}
+\end{document}

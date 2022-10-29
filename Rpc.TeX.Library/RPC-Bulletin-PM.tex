@@ -1,0 +1,199 @@
+\documentclass[letterpaper, landscape, 11pt]{letter} 
+\usepackage{multicol}
+\usepackage{xltxtra}
+\usepackage[left=0.4in, right=0.4in, top=0.7in, bottom=0.4in]{geometry}
+\usepackage{setspace}
+\usepackage{parskip}
+
+% Begin what's needed to make a dagger footnote symbol
+\makeatletter
+\newcommand*{\myfnsymbolsingle}[1]{%
+  \ensuremath{%
+    \ifcase#1% 0
+    \or % 1
+      \dagger   
+    \or % 2
+      \dagger
+    \or % 3  
+      \ddagger
+    \or % 4   
+      \mathsection
+    \or % 5
+      \mathparagraph
+    \else % >= 6
+      \@ctrerr  
+    \fi
+  }%   
+}   
+\makeatother
+
+\newcommand*{\myfnsymbol}[1]{%
+  \myfnsymbolsingle{\value{#1}}%
+}
+
+% remove upper boundary by multiplying the symbols if needed
+\usepackage{alphalph}
+\newalphalph{\myfnsymbolmult}[mult]{\myfnsymbolsingle}{}
+
+\renewcommand*{\thefootnote}{%
+  \myfnsymbolmult{\value{footnote}}%
+}
+
+% End what's needed to make a dagger footnote symbol
+
+\newcommand\textalign[2][]{%
+\ifx#1l\relax
+  \makebox[0pt][l]{#2}%
+\else
+  \ifx#1r\relax
+    \makebox[0pt][r]{#2}%
+  \else  
+    \ifx#1c\relax
+      \makebox[0pt][c]{#2}%
+    \fi\fi\fi
+}
+
+\begin{document}
+\setlength{\parskip}{0pt}
+\setmainfont{Book Antiqua}
+\pagenumbering{gobble}
+\noindent
+\setlength{\columnsep}{0.6in}
+\begin{multicols}{2}
+
+\vbox to 7in
+{
+% =======================================================
+\begin{centering}
+\huge{Lord's Day Evening Worship}\par
+\vspace{6pt}
+\large{<<DATE>>}\par
+\vspace{-3pt}
+\hrulefill\par
+\end{centering}
+% =======================================================
+
+\vspace{10pt}
+Prelude\par
+
+% =======================================================
+
+\vspace{14pt}
+\begin{tabbing}
+\=\hspace*{.5\linewidth}\=\hspace{.5\linewidth}\=\kill \par
+\> \textalign[l]{Call to Worship} \>  \> \textalign[r]{\emph{<<CALLER-TO-WORSHIP>>}}\par
+\end{tabbing}
+
+% =======================================================
+
+\vspace{14pt}
+\begin{tabbing}
+\=\hspace*{.5\linewidth}\=\hspace{.5\linewidth}\=\kill \par
+\> \textalign[l]{*Hymn of Praise: <<HYMN-PRAISE-NUMBER>>} \>  \> \textalign[r]{\emph{<<HYMN-PRAISE-NAME>>}}\par
+\end{tabbing}
+
+% =======================================================
+
+\vspace{14pt}
+*Prayer of Adoration and Invocation\par
+
+% =======================================================
+
+\vspace{14pt}
+Hymn Sing:\par
+\vspace{8pt}
+\begin{tabbing}
+\=\hspace*{.5\linewidth}\=\hspace{.5\linewidth}\=\kill \par
+\> \textalign[l]{\hspace{0.4in}<<HYMN-SING-1-NUMBER>>} \>  \> \textalign[r]{\emph{<<HYMN-SING-1-NAME>>}}\par
+\end{tabbing}
+
+\vspace{10pt}
+\begin{tabbing}
+\=\hspace*{.5\linewidth}\=\hspace{.5\linewidth}\=\kill \par
+\> \textalign[l]{\hspace{0.4in}<<HYMN-SING-2-NUMBER>>} \>  \> \textalign[r]{\emph{<<HYMN-SING-2-NAME>>}}\par
+\end{tabbing}
+
+\vspace{10pt}
+\begin{tabbing}
+\=\hspace*{.5\linewidth}\=\hspace{.5\linewidth}\=\kill \par
+\> \textalign[l]{\hspace{0.4in}<<HYMN-SING-3-NUMBER>>} \>  \> \textalign[r]{\emph{<<HYMN-SING-3-NAME>>}}\par
+\end{tabbing}
+
+% =======================================================
+
+%<<COLLECTION>>\vspace{14pt}The Collection\par
+
+%<<COLLECTION>>\vspace{14pt}
+%<<COLLECTION>>The Prayer of Consecration\par
+
+% =======================================================
+
+\vspace{14pt}
+\begin{tabbing}
+\=\hspace*{.5\linewidth}\=\hspace{.5\linewidth}\=\kill \par
+\> \textalign[l]{Scripture Lesson} \>  \> \textalign[r]{\emph{<<LESSON>>}} \par
+\end{tabbing}
+
+% =======================================================
+
+\vspace{14pt}
+Confession of Faith (\emph{see adjacent confession})\par
+
+% =======================================================
+
+\vspace{14pt}
+\begin{tabbing}
+\=\hspace*{.5\linewidth}\=\hspace{.5\linewidth}\=\kill \par
+\> \textalign[l]{Sermon} \>  \> \textalign[r]{\emph{<<PREACHER>>}} \par
+\end{tabbing}
+
+% =======================================================
+
+\vspace{14pt}
+Prayer of Response\par
+
+\vspace{14pt}
+\begin{tabbing}
+\=\hspace*{.5\linewidth}\=\hspace{.5\linewidth}\=\kill \par
+\> \textalign[l]{*Hymn of Response: <<HYMN-RESPONSE-NUMBER>>} \>  \> \textalign[r]{\emph{<<HYMN-RESPONSE-NAME>>}} \par
+\end{tabbing}
+
+% =======================================================
+
+\vspace{14pt}
+*Benediction\par
+}
+
+\begin{centering}
+\vspace{-5pt}
+\hrulefill
+\end{centering}
+
+\setmainfont{Bell Gothic Italic W08 Regular}
+\emph{\footnotesize{*Please stand}}\par
+\setmainfont{Book Antiqua}
+
+% =======================================================
+\columnbreak
+% =======================================================
+
+\begin{centering}
+\large{Confession of Faith}\par
+\vspace{-3pt}
+\hrulefill\par
+\end{centering}
+
+\vspace{12pt}
+\vbox to 5in
+{
+\leftskip0.15in\relax
+\rightskip0.15in\relax
+\setmainfont{BellGothic BT}
+\large{<<CONFESSION-FAITH>>}
+\setmainfont{Book Antiqua}
+\leftskip0in\relax
+\rightskip0in\relax
+}
+
+\end{multicols}
+\end{document}

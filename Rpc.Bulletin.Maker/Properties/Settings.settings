@@ -1,0 +1,27 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="Rpc.Bulletin.Maker.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="SourceFilesFolder" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">C:\Users\david\Desktop\RPC Bulletin Builder\SourceFiles</Value>
+    </Setting>
+    <Setting Name="TeXMorningBulletinTemplate" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">C:\Users\david\Desktop\RPC Bulletin Builder\SourceCode\Rpc.TeX.Library\RPC-Bulletin-AM.tex</Value>
+    </Setting>
+    <Setting Name="TeXEveningBulletinTemplate" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">C:\Users\david\Desktop\RPC Bulletin Builder\SourceCode\Rpc.TeX.Library\RPC-Bulletin-PM.tex</Value>
+    </Setting>
+    <Setting Name="TeXFileFolder" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">C:\Users\david\Desktop\RPC Bulletin Builder\TeXFiles</Value>
+    </Setting>
+    <Setting Name="PdfGeneratorExe" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">C:\Users\david\Desktop\RPC Bulletin Builder\miktex-portable\texmfs\install\miktex\bin\x64\xelatex.exe</Value>
+    </Setting>
+    <Setting Name="TargetFilesFolder" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">C:\Users\david\Desktop\RPC Bulletin Builder\TargetFiles</Value>
+    </Setting>
+    <Setting Name="TeXWorksExe" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">C:\Users\david\Desktop\RPC Bulletin Builder\miktex-portable\texmfs\install\miktex\bin\x64\texworks.exe</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>
