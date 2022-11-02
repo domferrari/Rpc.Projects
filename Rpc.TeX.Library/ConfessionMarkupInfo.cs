@@ -11,7 +11,7 @@ namespace Rpc.TeX.Library
 	public class ConfessionMarkupInfo
 	{
 		public ConfessionType ConfessionType;
-		public bool UseSmallFont { get; private set; }
+		public bool UseSmallFont { get; set; }
 		public bool NiceneCreedMode { get; set; }
 
 		/// -----------------------------------------------------------------------------------------------------------
@@ -19,7 +19,7 @@ namespace Rpc.TeX.Library
 		/// Normally use '8pt'. For long confessions, try '6pt'
 		/// </summary>
 		/// -----------------------------------------------------------------------------------------------------------
-		public string SpaceBetweenParagraphs { get; private set; }
+		public string SpaceBetweenParagraphs { get; set; }
 
 		/// -----------------------------------------------------------------------------------------------------------
 		private ConfessionMarkupInfo()

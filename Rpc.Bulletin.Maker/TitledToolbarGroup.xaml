@@ -1,0 +1,24 @@
+﻿<UserControl x:Class="Rpc.Bulletin.Maker.TitledToolbarGroup"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+			 mc:Ignorable="d" Name="_ttgCtrl">
+	<Grid>
+		<Grid.RowDefinitions>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition />
+		</Grid.RowDefinitions>
+
+		<!--<Grid.ColumnDefinitions>
+								<ColumnDefinition Width="Auto" />
+								<ColumnDefinition Width="Auto" />
+							</Grid.ColumnDefinitions>-->
+
+		<Border Grid.Row="0" Padding="0,7,0,3" Margin="-7,0,-7,7" Background="#30FFFFFF">
+			<TextBlock x:Name="_txtTitle" FontSize="11" HorizontalAlignment="Center"
+								   Style="{StaticResource MaterialDesignBody1TextBlock}"/>
+		</Border>
+		<ContentPresenter Grid.Row="1" Content="{Binding AdditionalContent, ElementName=_ttgCtrl}" />
+	</Grid>
+</UserControl>

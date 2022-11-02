@@ -129,6 +129,9 @@ namespace Rpc.TeX.Library
 			text = _faithConfessionMarkupInfo.NiceneCreedMode ? "%NICENE-CREED" : "%NO-NICENE-CREED";
 			_markupText = _markupText.Replace(text, string.Empty);
 
+			_markupText = _markupText.Replace("<<CONFESSION-SIN-ATTRIBUTION>>", string.Empty);
+			_markupText = _markupText.Replace("<<CONFESSION-FAITH-ATTRIBUTION>>", string.Empty);
+
 			return _markupText;
 		}
 	}

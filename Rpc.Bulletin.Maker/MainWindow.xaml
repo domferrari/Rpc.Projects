@@ -1,14 +1,16 @@
-﻿<Window x:Class="Rpc.Bulletin.Maker.MainWindow"
+﻿<Window
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:Rpc.Bulletin.Maker"
+        xmlns:local="clr-namespace:Rpc.Bulletin.Maker"	
+		xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
+		xmlns:System="clr-namespace:System;assembly=System.Runtime" x:Class="Rpc.Bulletin.Maker.MainWindow"
         mc:Ignorable="d"
 		Title="RPC Bulletin Maker" Height="850" Width="1000"
+		x:Name="_mainWindow"
 		WindowStartupLocation="CenterScreen"	
-		xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
-		Style="{StaticResource MaterialDesignWindow}">
+		>
 	<Window.Resources>
 		<ResourceDictionary>
 			<ResourceDictionary.MergedDictionaries>
@@ -17,86 +19,112 @@
 		</ResourceDictionary>
 	</Window.Resources>
 
-	<md:DialogHost x:Name="_dialog">
+	<Window.Style>
+		<StaticResource ResourceKey="MaterialDesignWindow"/>
+	</Window.Style>
+
+	<md:DialogHost x:Name="_dlgHost">
 		<Grid>
 			<Grid.RowDefinitions>
 				<RowDefinition Height="Auto"/>
 				<RowDefinition />
 			</Grid.RowDefinitions>
-			
+
 			<ToolBarTray Grid.Row="0">
 				<ToolBar ClipToBounds="False" Style="{StaticResource MaterialDesignToolBar}" >
-					<Button x:Name="_btnGeneratePdf" Click="HandleGenerateClick">
-						<Button.Content>
-							<StackPanel Orientation="Horizontal">
-								<md:PackIcon VerticalAlignment="Center" Kind="ArrowRightThinCircleOutline" Foreground="LightGreen" />
-								<TextBlock Text="Generate PDF" Style="{StaticResource MaterialDesignButtonTextBlock}"
-										   VerticalAlignment="Center" Margin="5,0,0,0"/>
-							</StackPanel>
-						</Button.Content>
-					</Button>
 
-					<Menu x:Name="_mnuOpen">
-						<MenuItem>
-							<MenuItem.Header>
-								<StackPanel Orientation="Horizontal">
-									<TextBlock Text="Open" Style="{StaticResource MaterialDesignButtonTextBlock}"
-										   VerticalAlignment="Center" Margin="5,0,0,0"/>
-									<md:PackIcon VerticalAlignment="Center" Kind="TriangleSmallDown" />
-								</StackPanel>
-							</MenuItem.Header>
-							<MenuItem Header="Open TeX in TeXWorks" Click="HandleOpenInTeXWorksClick"/>
-							<MenuItem Header="Open PDF in Default Viewer" Click="HandleOpenInDefaultPdfViewerClick"/>
-						</MenuItem>
-					</Menu>
+					<!-- Generate and Open in External App. buttons -->
+					<local:TitledToolbarGroup Title="PDF / TEX">
+						<StackPanel Orientation="Horizontal">
+
+							<!-- I'm using a menu here because when I nest a Button in anything other than the
+								ToolBar, it doesn't get highlighted when hovering the mouse over it. On the
+								other hand, a menu does. -->
+							<Menu Grid.Column="0" Grid.Row="1" VerticalAlignment="Center">
+								<MenuItem Command="{Binding GeneratePdfCmd}">
+									<MenuItem.Header>
+										<StackPanel Orientation="Horizontal">
+											<md:PackIcon Kind="ArrowRightThinCircleOutline" Foreground="LightGreen" Width="20" Height="20" />
+											<TextBlock Text="Generate PDF" VerticalAlignment="Center" Margin="5,0,0,0"/>
+										</StackPanel>
+									</MenuItem.Header>
+								</MenuItem>
+							</Menu>
+							<Menu Grid.Column="1" Grid.Row="1" VerticalAlignment="Center">
+								<MenuItem IsEnabled="{Binding CanOpenExternally}">
+									<MenuItem.Header>
+										<StackPanel Orientation="Horizontal">
+											<md:PackIcon VerticalAlignment="Center" Kind="FolderOpen" Foreground="DarkOrange" Width="20" Height="20" />
+											<TextBlock Text="Open" Style="{StaticResource MaterialDesignButtonTextBlock}"
+													   VerticalAlignment="Center" Margin="5,0,0,0"/>
+											<md:PackIcon VerticalAlignment="Center" Kind="TriangleSmallDown"
+														 Width="20" Height="20"	Foreground="DarkGray" />
+										</StackPanel>
+									</MenuItem.Header>
+									<MenuItem Header="Open TeX in TeXWorks" Click="HandleOpenInTeXWorksClick"
+											  Command="{Binding OpenInTeXWorksCmd}"/>
+									<MenuItem Header="Open PDF in Default Viewer" Click="HandleOpenInDefaultPdfViewerClick"
+											  Command="{Binding OpenInDefaultPdfViewerCmd}"/>
+								</MenuItem>
+							</Menu>
+						</StackPanel>
+					</local:TitledToolbarGroup>
+
 					<Separator />
-					<TextBlock Text="Confession Sin:" VerticalAlignment="Center" Margin="10,0,0,0" FontWeight="Bold"
-							   FontSize="15" Style="{StaticResource MaterialDesignButtonTextBlock}" x:Name="_txtConfessionSin" />
-					<ComboBox x:Name="_cboFontSzSin" Margin="12,0" md:HintAssist.Hint="Font Size"
-							  Style="{StaticResource MaterialDesignFloatingHintComboBox}"
-							  SelectionChanged="HandleConfessionComboSelectionChanged">
-						<ComboBoxItem Content="Normal" IsSelected="True" />
-						<ComboBoxItem Content="Small" />
-					</ComboBox>
-					<ComboBox x:Name="_cboSpacingSin" Margin="12,0" md:HintAssist.Hint="Spacing"
-							  Style="{StaticResource MaterialDesignFloatingHintComboBox}"
-							  SelectionChanged="HandleConfessionComboSelectionChanged">
-						<ComboBoxItem Content="8pt" IsSelected="True" />
-						<ComboBoxItem Content="6pt" />
-						<ComboBoxItem Content="4pt" />
-					</ComboBox>
-					
+
+					<!-- Confession of Sin Controls -->
+					<local:TitledToolbarGroup Title="CONFESSION OF SIN">
+						<StackPanel Orientation="Horizontal">
+							<ComboBox Margin="12,0,12,10" md:HintAssist.Hint="Font Size"
+									  IsEnabled="{Binding CanSetConfessionSinInfo}"
+									  Style="{StaticResource MaterialDesignFloatingHintComboBox}"
+									  ItemsSource="{Binding AvailableFontSizes}"
+									  SelectedItem="{Binding SelectedConfessionSinFontSz, Mode=TwoWay}"/>
+
+							<ComboBox Margin="12,0,12,10" md:HintAssist.Hint="Para. Spacing"
+									  IsEnabled="{Binding CanSetConfessionSinInfo}"
+									  Style="{StaticResource MaterialDesignFloatingHintComboBox}"
+									  ItemsSource="{Binding AvailableParaSpacing}"
+									  SelectedItem="{Binding SelectedConfessionSinParaSpacing, Mode=TwoWay}" />
+						</StackPanel>
+					</local:TitledToolbarGroup>
+
 					<Separator />
-					
-					<TextBlock Text="Confession Faith:" VerticalAlignment="Center" Margin="10,0,0,0" FontWeight="Bold"
-							   FontSize="15" Style="{StaticResource MaterialDesignButtonTextBlock}" x:Name="_txtConfessionFaith" />
-					<ComboBox x:Name="_cboFontSzFaith" Margin="12,0" md:HintAssist.Hint="Font Size"
-							  Style="{StaticResource MaterialDesignFloatingHintComboBox}"
-							  SelectionChanged="HandleConfessionComboSelectionChanged">
-						<ComboBoxItem Content="Normal" IsSelected="True" />
-						<ComboBoxItem Content="Small" />
-					</ComboBox>
-					<ComboBox x:Name="_cboSpacingFaith" Margin="12,0" md:HintAssist.Hint="Para. Spacing"
-							  Style="{StaticResource MaterialDesignFloatingHintComboBox}"
-							  SelectionChanged="HandleConfessionComboSelectionChanged">
-						<ComboBoxItem Content="8pt" IsSelected="True" />
-						<ComboBoxItem Content="6pt" />
-						<ComboBoxItem Content="4pt" />
-						<ComboBoxItem Content="3pt" />
-					</ComboBox>
-					<CheckBox x:Name="_chkNiceneCreedMode" Content="Nicene Creed Mode" Click="HandleNiceneCreedModeClicked" />
+
+					<!-- Confession of Faith Controls -->
+					<local:TitledToolbarGroup Title="CONFESSION OF FAITH">
+						<StackPanel Orientation="Horizontal">
+							<ComboBox Margin="12,0,12,10" md:HintAssist.Hint="Font Size"
+									  IsEnabled="{Binding CanSetConfessionFaithInfo}"
+									  Style="{StaticResource MaterialDesignFloatingHintComboBox}"
+									  ItemsSource="{Binding AvailableFontSizes}"
+									  SelectedItem="{Binding SelectedConfessionFaithFontSz, Mode=TwoWay}"/>
+
+							<ComboBox Margin="12,0,12,10" md:HintAssist.Hint="Para. Spacing"
+									  IsEnabled="{Binding CanSetConfessionFaithInfo}"
+									  Style="{StaticResource MaterialDesignFloatingHintComboBox}"
+									  ItemsSource="{Binding AvailableParaSpacing}"
+									  SelectedItem="{Binding SelectedConfessionFaithParaSpacing, Mode=TwoWay}" />
+							<CheckBox Content="Nicene Creed Mode" Margin="8,-7,10,0"
+									  IsEnabled="{Binding CanSetNiceneCreedMode}"
+									  IsChecked="{Binding InNiceneCreedMode, Mode=TwoWay}" />
+						</StackPanel>
+					</local:TitledToolbarGroup>
+
+					<Separator />
 				</ToolBar>
 			</ToolBarTray>
 
 			<TabControl Grid.Row="1" Style="{StaticResource MaterialDesignNavigationRailTabControl}"
 						md:NavigationRailAssist.ShowSelectionBackground="True" TabStripPlacement="Left"
-						x:Name="_tabCtrl" SelectionChanged="HandleTabSelectionChanged">
+						SelectedIndex="{Binding SelectedViewIndex, Mode=TwoWay}">
 
-				<TabItem Name="_tabSrcFile" AllowDrop="True">
+				<TabItem x:Name="_tabSrcFile" MinHeight="90" ToolTip="Bulletin Source Information">
 					<TabItem.Header>
-						<StackPanel Width="auto" Height="auto" ToolTip="Bulletin Source Information">
-							<md:PackIcon Width="24" Height="24" HorizontalAlignment="Center" Kind="Folder" />
-							<TextBlock HorizontalAlignment="Center" Text="Info. File" />
+						<StackPanel>
+							<md:PackIcon Width="24" Height="24" HorizontalAlignment="Center" Kind="Folder" Foreground="#FFC1244F" />
+							<TextBlock HorizontalAlignment="Center" Text="Source" Margin="0,5,0,0" Foreground="White" />
+							<TextBlock HorizontalAlignment="Center" Text="File" Margin="0,3,0,0" Foreground="White" />
 						</StackPanel>
 					</TabItem.Header>
 					<Grid>
@@ -110,41 +138,39 @@
 									<ColumnDefinition />
 									<ColumnDefinition Width="Auto" />
 								</Grid.ColumnDefinitions>
-								<TextBlock x:Name="_txtSrcFilePath" Margin="10" VerticalAlignment="Center" Grid.Column="0"
+								<TextBlock Margin="10" VerticalAlignment="Center" Grid.Column="0" Text="{Binding PathToSrcFile}"
 										   Style="{StaticResource MaterialDesignTextBlock}" TextTrimming="CharacterEllipsis" />
 								<Button Style="{StaticResource MaterialDesignRaisedDarkButton}" ToolTip="Save"
-										Click="HandleSaveButtonClick" Grid.Column="1" Margin="0,0,10,0">
-									<Button.Content>
-										<md:PackIcon VerticalAlignment="Center" HorizontalAlignment="Center" Kind="ContentSave" />
-									</Button.Content>
+										Grid.Column="1" Margin="0,0,10,0">
+									<md:PackIcon VerticalAlignment="Center" HorizontalAlignment="Center" Kind="ContentSave" />
 								</Button>
 							</Grid>
 						</Border>
-						<TextBox x:Name="_txtSourceFile" Margin="0,0,0,-1" Style="{StaticResource MaterialDesignTextBox}"
-								 FontFamily="Cascadia Mono" AcceptsReturn="True" AcceptsTab="True" Grid.Row="1"
-								 HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" Padding="10,0,0,0" />
+						<TextBox Margin="0,0,0,-1" Style="{StaticResource MaterialDesignTextBox}" Grid.Row="1" Padding="10,0,0,0"
+								 Text="{Binding SrcFileContent, Mode=TwoWay}" FontFamily="Cascadia Mono" AcceptsReturn="True"
+								 AcceptsTab="True" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto"
+								 CaretBrush="LightGray" />
 					</Grid>
 				</TabItem>
-				<TabItem Name="_tabMorningTeXMarkup">
+				<TabItem x:Name="_tabMorningTeXMarkup" MinHeight="90">
 					<TabItem.Header>
-						<StackPanel Width="auto" Height="auto">
-							<md:PackIcon Width="24" Height="24" HorizontalAlignment="Center" Kind="Brightness7" />
-							<TextBlock HorizontalAlignment="Center" Text="TeX File" />
+						<StackPanel>
+							<md:PackIcon Width="24" Height="24" HorizontalAlignment="Center" Kind="Brightness7" Foreground="Yellow" />
+							<TextBlock HorizontalAlignment="Center" Text="Morning" Margin="0,5,0,0" Foreground="White" />
+							<TextBlock HorizontalAlignment="Center" Text="TeX File" Margin="0,3,0,0" Foreground="White" />
 						</StackPanel>
 					</TabItem.Header>
-					<local:TeXPdfView x:Name="_tpMorningView"
-									  BulletinType="AM"
-									  CanSetConfessionFaithSpecs="True"
-									  CanSetConfessionSinSpecs="True" />
+					<local:TeXPdfView x:Name="_tpMorningView" DataContext="{Binding MorningViewModel}" />
 				</TabItem>
-				<TabItem Name="_tabEveningTeXMarkup">
+				<TabItem x:Name="_tabEveningTeXMarkup" MinHeight="90">
 					<TabItem.Header>
-						<StackPanel Width="auto" Height="auto">
-							<md:PackIcon Width="24" Height="24" HorizontalAlignment="Center" Kind="MoonWaningCrescent" />
-							<TextBlock HorizontalAlignment="Center" Text="TeX File" />
+						<StackPanel>
+							<md:PackIcon Width="24" Height="24" HorizontalAlignment="Center" Kind="MoonWaningCrescent" Foreground="#FF19C8B4" />
+							<TextBlock HorizontalAlignment="Center" Text="Evening" Margin="0,5,0,0" Foreground="White" />
+							<TextBlock HorizontalAlignment="Center" Text="TeX File" Margin="0,3,0,0" Foreground="White" />
 						</StackPanel>
 					</TabItem.Header>
-					<local:TeXPdfView x:Name="_tpEveningView" BulletinType="PM" />
+					<local:TeXPdfView x:Name="_tpEveningView" DataContext="{Binding EveningViewModel}" />
 				</TabItem>
 			</TabControl>
 		</Grid>

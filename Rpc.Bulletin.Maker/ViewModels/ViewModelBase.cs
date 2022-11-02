@@ -1,0 +1,32 @@
+﻿using Rpc.TeX.Library;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
+using System.Windows.Input;
+
+namespace Rpc.Bulletin.Maker.ViewModels;
+
+public abstract class ViewModelBase : INotifyPropertyChanged
+{
+	public string[] AvailableFontSizes { get; } = new[] { "Normal", "Small" };
+	public string[] AvailableParaSpacing { get; } = new[] { "8pt", "7pt", "6pt", "5pt", "4pt", "3pt" };
+
+	public virtual bool CanGeneratePdf { get; set; }
+	public virtual bool CanOpenPdfExternally { get; set; }
+	public virtual bool CanOpenTeXExternally { get; set; }
+	public virtual bool CanSetConfessionSinInfo { get; set; }
+	public virtual bool CanSetConfessionFaithInfo { get; set; }
+	public virtual bool CanSetNiceneCreedMode { get; set; }
+	public virtual bool InNiceneCreedMode { get; set; }
+	public virtual ConfessionMarkupInfo ConfessionSinMarkupInfo { get; set; } = new ConfessionMarkupInfo(ConfessionType.Sin);
+	public virtual ConfessionMarkupInfo ConfessionFaithMarkupInfo { get; set; } = new ConfessionMarkupInfo(ConfessionType.Faith);
+
+	public event PropertyChangedEventHandler PropertyChanged;
+
+    protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+
+	public abstract void OpenInTeXWorks();
+	public abstract void OpenInDefaultPdfViewer();
+	public abstract Task<bool> GeneratePdf();
+}
