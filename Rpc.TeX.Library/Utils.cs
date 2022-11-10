@@ -3,9 +3,13 @@
 	public static class Utils
 	{
 		/// -----------------------------------------------------------------------------------------------------------
-		public static DateTime GetNextSunday()
+		/// <summary>
+		/// A null from date means today.
+		/// </summary>
+		/// -----------------------------------------------------------------------------------------------------------
+		public static DateTime GetFollowingSunday(DateTime? from = null)
 		{
-			var date = DateTime.Now;
+			var date = from ?? DateTime.Now;
 
 			while (date.DayOfWeek != DayOfWeek.Sunday)
 				date = date.AddDays(1);

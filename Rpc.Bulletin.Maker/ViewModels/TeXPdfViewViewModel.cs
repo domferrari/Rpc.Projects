@@ -1,11 +1,8 @@
 ﻿using MaterialDesignThemes.Wpf;
 using Rpc.TeX.Library;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Threading;
 
@@ -19,14 +16,15 @@ namespace Rpc.Bulletin.Maker.ViewModels
 		private string _pathToTeXFile;
 		private string _teXFileContent;
 		private bool _isOutputPanelOpen;
+		private bool _isPdfLoaded;
 		private readonly DialogHost _dlgHost;
-		private readonly Action<string> _pdfLoadingProvider;
+		private readonly Action<string, Action> _pdfLoadingProvider;
 		private readonly Action<string> _generatePdfOutputReadyProvider;
 
 		public BulletinType BulletinType { get; }
 
 		public override bool CanGeneratePdf => File.Exists(_pathToTeXFile);
-		public override bool CanOpenPdfExternally => File.Exists(_pathToPdfFile);
+		public override bool CanOpenPdfExternally => File.Exists(_pathToPdfFile) && _isPdfLoaded;
 		public override bool CanOpenTeXExternally => File.Exists(_pathToTeXFile);
 		public override bool CanSetConfessionSinInfo => BulletinType == BulletinType.AM;
 		public override bool CanSetConfessionFaithInfo => BulletinType == BulletinType.AM && !InNiceneCreedMode;
@@ -34,16 +32,32 @@ namespace Rpc.Bulletin.Maker.ViewModels
 
 		/// -----------------------------------------------------------------------------------------------------------
 		public TeXPdfViewViewModel(BulletinType bulletinType, string sundayDateAsStr, string pathToSrcFile,
-			DialogHost dlgHost, Action<string> generatePdfOutputReadyProvider, Action<string> pdfLoadingProvider)
+			DialogHost dlgHost, Action<string> generatePdfOutputReadyProvider,
+			Action<string, Action> pdfLoadingProvider)
 		{
 			BulletinType = bulletinType;
-			_pathToSrcFile = pathToSrcFile;
 			_dlgHost = dlgHost;
-			_sundayDateAsStr = sundayDateAsStr;
 			_pdfLoadingProvider = pdfLoadingProvider;
 			_generatePdfOutputReadyProvider = generatePdfOutputReadyProvider;
 
+			ResetSource(sundayDateAsStr, pathToSrcFile);
+		}
+
+		/// -----------------------------------------------------------------------------------------------------------
+		public void ResetSource(string sundayDateAsStr, string pathToSrcFile, bool refreshView = false)
+		{
+			_pathToSrcFile = pathToSrcFile;
+			_sundayDateAsStr = sundayDateAsStr;
+
 			TrySetPaths();
+
+			if (refreshView)
+			{
+				IsOutputPanelOpen = false;
+				LoadOrGenerateTeXFile();
+				_isPdfLoaded = false;
+				RefreshView();
+			}
 		}
 
 		/// -----------------------------------------------------------------------------------------------------------
@@ -84,12 +98,12 @@ namespace Rpc.Bulletin.Maker.ViewModels
 		/// -----------------------------------------------------------------------------------------------------------
 		public string PathToPdfFile
 		{
-			get => _pathToPdfFile;
+			get => _isPdfLoaded ? _pathToPdfFile : string.Empty;
 			set
 			{
 				_pathToPdfFile = value;
 				OnPropertyChanged();
-				_pdfLoadingProvider?.Invoke(value);
+				TryLoadPdf();
 			}
 		}
 
@@ -112,7 +126,7 @@ namespace Rpc.Bulletin.Maker.ViewModels
 				PathToTeXFile = Path.Combine(Properties.Settings.Default.TeXFileFolder,
 					$"{_sundayDateAsStr}_{BulletinType}.tex");
 
-				PathToPdfFile = Path.Combine(Properties.Settings.Default.TeXFileFolder,
+				PathToPdfFile = Path.Combine(Properties.Settings.Default.TargetFilesFolder,
 					$"{_sundayDateAsStr}_{BulletinType}.pdf");
 
 				LoadOrGenerateTeXFile(true);
@@ -185,7 +199,7 @@ namespace Rpc.Bulletin.Maker.ViewModels
 		/// -----------------------------------------------------------------------------------------------------------
 		public override void OpenInDefaultPdfViewer()
 		{
-			if (!File.Exists(PathToPdfFile))
+			if (!File.Exists(_pathToPdfFile))
 			{
 				DialogContent.Show("You must first generate the PDF file.", DialogType.Ok, _dlgHost);
 				return;
@@ -193,24 +207,13 @@ namespace Rpc.Bulletin.Maker.ViewModels
 
 			var startInfo = new ProcessStartInfo
 			{
-				FileName = $"\"{PathToPdfFile}\"",
+				FileName = $"\"{_pathToPdfFile}\"",
 				UseShellExecute = true,
 			};
 
 			var process = new Process { StartInfo = startInfo };
 			process.Start();
 		}
-
-		///// -----------------------------------------------------------------------------------------------------------
-		//public void SetConfessionMarkupInfo(ConfessionMarkupInfo cmi)
-		//{
-		//	if (cmi.ConfessionType == ConfessionType.Sin)
-		//		ConfessionSinMarkupInfo = cmi;
-		//	else
-		//		_confessionFaithMarkupInfo = cmi;
-
-		//	LoadOrGenerateTeXFile(true);
-		//}
 
 		/// -----------------------------------------------------------------------------------------------------------
 		public override async Task<bool> GeneratePdf()
@@ -235,6 +238,26 @@ namespace Rpc.Bulletin.Maker.ViewModels
 			Dispatcher.CurrentDispatcher.Invoke(() => PathToPdfFile = pathToPdfFile);
 
 			return true;
+		}
+
+		/// -----------------------------------------------------------------------------------------------------------
+		public override void RefreshView()
+		{
+			if (File.Exists(_pathToPdfFile) && !_isPdfLoaded)
+				TryLoadPdf();
+		}
+
+		/// -----------------------------------------------------------------------------------------------------------
+		private void TryLoadPdf()
+		{
+			_isPdfLoaded = false;
+			OnPropertyChanged(nameof(PathToPdfFile));
+
+			_pdfLoadingProvider?.Invoke(_pathToPdfFile, () =>
+			{
+				_isPdfLoaded = true;
+				OnPropertyChanged(nameof(PathToPdfFile));
+			});
 		}
 	}
 }

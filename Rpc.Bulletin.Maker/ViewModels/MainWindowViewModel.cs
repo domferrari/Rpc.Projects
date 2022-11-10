@@ -1,10 +1,10 @@
 ﻿using MaterialDesignThemes.Wpf;
+using Microsoft.Win32;
 using Rpc.TeX.Library;
 using System;
+using System.Globalization;
 using System.IO;
 using System.Threading.Tasks;
-using System.Windows.Input;
-using System.Windows.Threading;
 
 namespace Rpc.Bulletin.Maker.ViewModels;
 
@@ -27,19 +27,19 @@ public class MainWindowViewModel : ViewModelBase
 	public TeXPdfViewViewModel MorningViewModel { get; }
 	public TeXPdfViewViewModel EveningViewModel { get; }
 	public Command GeneratePdfCmd { get; }
+	public Command OpenSrcFileCmd { get; }
 	public Command OpenInDefaultPdfViewerCmd { get; }
 	public Command OpenInTeXWorksCmd { get; }
 
 	private ViewModelBase[] _viewModels;
-
 	private ViewModelBase CurrentVwModel => _viewModels[_selectedViewIndex];
 
 	/// -----------------------------------------------------------------------------------------------------------
 	public MainWindowViewModel(DialogHost dlgHost,
 		Action<string> confessionSinGeneratePdfOutputReadyProvider,
-		Action<string> confessionSinPdfLoadingProvider,
+		Action<string, Action> confessionSinPdfLoadingProvider,
 		Action<string> confessionFaithGeneratePdfOutputReadyProvider,
-		Action<string> confessionFaithPdfLoadingProvider)
+		Action<string, Action> confessionFaithPdfLoadingProvider)
 	{
 		if (!Directory.Exists(Properties.Settings.Default.SourceFilesFolder))
 			Directory.CreateDirectory(Properties.Settings.Default.SourceFilesFolder);
@@ -62,9 +62,10 @@ public class MainWindowViewModel : ViewModelBase
 
 		_viewModels = new[] { (ViewModelBase)this, MorningViewModel, EveningViewModel };
 
-		GeneratePdfCmd = new Command(async _ => await GeneratePdf(), _ => CanGeneratePdf);
+		OpenSrcFileCmd = new Command(_ => OpenSourceFile(), _ => true);
 		OpenInTeXWorksCmd = new Command(_ => OpenInTeXWorks(), _ => CanOpenTeXExternally);
 		OpenInDefaultPdfViewerCmd = new Command(_ => OpenInDefaultPdfViewer(), _ => CanOpenPdfExternally);
+		GeneratePdfCmd = new Command(async _ => await GeneratePdf(), _ => CanGeneratePdf);
 	}
 
 	/// -----------------------------------------------------------------------------------------------------------
@@ -76,6 +77,7 @@ public class MainWindowViewModel : ViewModelBase
 			_selectedViewIndex = value;
 			OnPropertyChanged();
 			RefreshView();
+			CurrentVwModel.RefreshView();
 		}
 	}
 
@@ -200,7 +202,7 @@ public class MainWindowViewModel : ViewModelBase
 	}
 
 	/// -----------------------------------------------------------------------------------------------------------
-	private void RefreshView()
+	public override void RefreshView()
 	{
 		OnPropertyChanged(nameof(CanOpenExternally));
 		OnPropertyChanged(nameof(CanGeneratePdf));
@@ -223,13 +225,56 @@ public class MainWindowViewModel : ViewModelBase
 	/// -----------------------------------------------------------------------------------------------------------
 	private void TryFindNewSourceFile()
 	{
-		_sundayDate = Utils.GetNextSunday();
-		_sundayDateAsStr = $"{_sundayDate:yyyy-MM-dd}";
-		var fileName = $"{_sundayDateAsStr}.txt";
-		PathToSrcFile = Path.Combine(Properties.Settings.Default.SourceFilesFolder, fileName);
+		var from = DateTime.Today;
 
-		if (File.Exists(PathToSrcFile))
-			SrcFileContent = File.ReadAllText(PathToSrcFile);
+		for (var attempts = 0; attempts < 5; attempts++)
+		{
+			_sundayDate = Utils.GetFollowingSunday(from);
+			_sundayDateAsStr = $"{_sundayDate:yyyy-MM-dd}";
+			var fileName = $"{_sundayDateAsStr}.txt";
+			PathToSrcFile = Path.Combine(Properties.Settings.Default.SourceFilesFolder, fileName);
+
+			if (!File.Exists(PathToSrcFile))
+				from = from.AddDays(-7);
+			else
+			{
+				SrcFileContent = File.ReadAllText(PathToSrcFile);
+				return;
+			}
+		}
+	}
+
+	/// -----------------------------------------------------------------------------------------------------------
+	private void OpenSourceFile()
+	{
+		var openDlg = new OpenFileDialog
+		{
+			CheckFileExists = true,
+			Filter = "Text File (*.txt)|*.txt|All Files (*.*)|*.*",
+			Title = "Open Bulletin Source File",
+		};
+
+		if (openDlg.ShowDialog() != true)
+			return;
+
+		if (PathToSrcFile != null && PathToSrcFile.ToLower() == openDlg.FileName.ToLower())
+			return;
+
+		var fileName = Path.GetFileNameWithoutExtension(openDlg.FileName).Replace("-", string.Empty);
+		
+		if (!DateTime.TryParseExact(fileName, "yyyyMMdd", CultureInfo.InvariantCulture, DateTimeStyles.AssumeLocal, out var sundayDate))
+		{
+			DialogContent.Show($"{fileName} has an invalid name.", DialogType.Ok, _dlgHost);
+			return;
+		}
+
+		_sundayDate = sundayDate;
+		_sundayDateAsStr = $"{_sundayDate:yyyy-MM-dd}";
+		PathToSrcFile = openDlg.FileName;
+		SrcFileContent = File.ReadAllText(PathToSrcFile);
+		MorningViewModel.ResetSource(_sundayDateAsStr, PathToSrcFile, true);
+		EveningViewModel.ResetSource(_sundayDateAsStr, PathToSrcFile, true);
+		RefreshView();
 	}
 
 	/// -----------------------------------------------------------------------------------------------------------

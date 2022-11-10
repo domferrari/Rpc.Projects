@@ -1,16 +1,15 @@
-﻿<Window
+﻿<Window x:Class="Rpc.Bulletin.Maker.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Rpc.Bulletin.Maker"	
+		xmlns:shell="http://schemas.microsoft.com/winfx/2006/xaml/presentation/shell"
 		xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
-		xmlns:System="clr-namespace:System;assembly=System.Runtime" x:Class="Rpc.Bulletin.Maker.MainWindow"
         mc:Ignorable="d"
 		Title="RPC Bulletin Maker" Height="850" Width="1000"
 		x:Name="_mainWindow"
-		WindowStartupLocation="CenterScreen"	
-		>
+		WindowStartupLocation="CenterScreen">
 	<Window.Resources>
 		<ResourceDictionary>
 			<ResourceDictionary.MergedDictionaries>
@@ -22,15 +21,22 @@
 	<Window.Style>
 		<StaticResource ResourceKey="MaterialDesignWindow"/>
 	</Window.Style>
-
+	
+	<WindowChrome.WindowChrome>
+		<WindowChrome CaptionHeight="32" ResizeBorderThickness="6" />
+	</WindowChrome.WindowChrome>
+	
 	<md:DialogHost x:Name="_dlgHost">
 		<Grid>
 			<Grid.RowDefinitions>
+				<RowDefinition Height="32"/>
 				<RowDefinition Height="Auto"/>
 				<RowDefinition />
 			</Grid.RowDefinitions>
 
-			<ToolBarTray Grid.Row="0">
+			<local:TitleBar Grid.Row="0" x:Name="_titleBar" />
+
+			<ToolBarTray Grid.Row="1">
 				<ToolBar ClipToBounds="False" Style="{StaticResource MaterialDesignToolBar}" >
 
 					<!-- Generate and Open in External App. buttons -->
@@ -41,17 +47,7 @@
 								ToolBar, it doesn't get highlighted when hovering the mouse over it. On the
 								other hand, a menu does. -->
 							<Menu Grid.Column="0" Grid.Row="1" VerticalAlignment="Center">
-								<MenuItem Command="{Binding GeneratePdfCmd}">
-									<MenuItem.Header>
-										<StackPanel Orientation="Horizontal">
-											<md:PackIcon Kind="ArrowRightThinCircleOutline" Foreground="LightGreen" Width="20" Height="20" />
-											<TextBlock Text="Generate PDF" VerticalAlignment="Center" Margin="5,0,0,0"/>
-										</StackPanel>
-									</MenuItem.Header>
-								</MenuItem>
-							</Menu>
-							<Menu Grid.Column="1" Grid.Row="1" VerticalAlignment="Center">
-								<MenuItem IsEnabled="{Binding CanOpenExternally}">
+								<MenuItem>
 									<MenuItem.Header>
 										<StackPanel Orientation="Horizontal">
 											<md:PackIcon VerticalAlignment="Center" Kind="FolderOpen" Foreground="DarkOrange" Width="20" Height="20" />
@@ -61,10 +57,19 @@
 														 Width="20" Height="20"	Foreground="DarkGray" />
 										</StackPanel>
 									</MenuItem.Header>
-									<MenuItem Header="Open TeX in TeXWorks" Click="HandleOpenInTeXWorksClick"
-											  Command="{Binding OpenInTeXWorksCmd}"/>
-									<MenuItem Header="Open PDF in Default Viewer" Click="HandleOpenInDefaultPdfViewerClick"
-											  Command="{Binding OpenInDefaultPdfViewerCmd}"/>
+									<MenuItem Header="Open Source File..." Command="{Binding OpenSrcFileCmd}"/>
+									<MenuItem Header="Open TeX in TeXWorks" Command="{Binding OpenInTeXWorksCmd}"/>
+									<MenuItem Header="Open PDF in Default Viewer" Command="{Binding OpenInDefaultPdfViewerCmd}"/>
+								</MenuItem>
+							</Menu>
+							<Menu Grid.Column="1" Grid.Row="1" VerticalAlignment="Center">
+								<MenuItem Command="{Binding GeneratePdfCmd}">
+									<MenuItem.Header>
+										<StackPanel Orientation="Horizontal">
+											<md:PackIcon Kind="ArrowRightThinCircleOutline" Foreground="LightGreen" Width="20" Height="20" />
+											<TextBlock Text="Generate PDF" VerticalAlignment="Center" Margin="5,0,0,0"/>
+										</StackPanel>
+									</MenuItem.Header>
 								</MenuItem>
 							</Menu>
 						</StackPanel>
@@ -75,13 +80,15 @@
 					<!-- Confession of Sin Controls -->
 					<local:TitledToolbarGroup Title="CONFESSION OF SIN">
 						<StackPanel Orientation="Horizontal">
-							<ComboBox Margin="12,0,12,10" md:HintAssist.Hint="Font Size"
+							<ComboBox Margin="12,0,12,10"
+									  md:HintAssist.Hint="Font Size"
 									  IsEnabled="{Binding CanSetConfessionSinInfo}"
 									  Style="{StaticResource MaterialDesignFloatingHintComboBox}"
 									  ItemsSource="{Binding AvailableFontSizes}"
 									  SelectedItem="{Binding SelectedConfessionSinFontSz, Mode=TwoWay}"/>
 
-							<ComboBox Margin="12,0,12,10" md:HintAssist.Hint="Para. Spacing"
+							<ComboBox Margin="12,0,12,10"
+									  md:HintAssist.Hint="Para. Spacing"
 									  IsEnabled="{Binding CanSetConfessionSinInfo}"
 									  Style="{StaticResource MaterialDesignFloatingHintComboBox}"
 									  ItemsSource="{Binding AvailableParaSpacing}"
@@ -94,18 +101,22 @@
 					<!-- Confession of Faith Controls -->
 					<local:TitledToolbarGroup Title="CONFESSION OF FAITH">
 						<StackPanel Orientation="Horizontal">
-							<ComboBox Margin="12,0,12,10" md:HintAssist.Hint="Font Size"
+							<ComboBox Margin="12,0,12,10"
+									  md:HintAssist.Hint="Font Size"
 									  IsEnabled="{Binding CanSetConfessionFaithInfo}"
 									  Style="{StaticResource MaterialDesignFloatingHintComboBox}"
 									  ItemsSource="{Binding AvailableFontSizes}"
 									  SelectedItem="{Binding SelectedConfessionFaithFontSz, Mode=TwoWay}"/>
 
-							<ComboBox Margin="12,0,12,10" md:HintAssist.Hint="Para. Spacing"
+							<ComboBox Margin="12,0,12,10"
+									  md:HintAssist.Hint="Para. Spacing"
 									  IsEnabled="{Binding CanSetConfessionFaithInfo}"
 									  Style="{StaticResource MaterialDesignFloatingHintComboBox}"
 									  ItemsSource="{Binding AvailableParaSpacing}"
 									  SelectedItem="{Binding SelectedConfessionFaithParaSpacing, Mode=TwoWay}" />
-							<CheckBox Content="Nicene Creed Mode" Margin="8,-7,10,0"
+
+							<CheckBox Content="Nicene Creed Mode"
+									  Margin="8,-7,10,0"
 									  IsEnabled="{Binding CanSetNiceneCreedMode}"
 									  IsChecked="{Binding InNiceneCreedMode, Mode=TwoWay}" />
 						</StackPanel>
@@ -115,7 +126,7 @@
 				</ToolBar>
 			</ToolBarTray>
 
-			<TabControl Grid.Row="1" Style="{StaticResource MaterialDesignNavigationRailTabControl}"
+			<TabControl Grid.Row="2" Style="{StaticResource MaterialDesignNavigationRailTabControl}"
 						md:NavigationRailAssist.ShowSelectionBackground="True" TabStripPlacement="Left"
 						SelectedIndex="{Binding SelectedViewIndex, Mode=TwoWay}">
 

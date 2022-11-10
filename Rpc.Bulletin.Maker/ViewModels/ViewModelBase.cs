@@ -2,9 +2,15 @@
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
-using System.Windows.Input;
 
 namespace Rpc.Bulletin.Maker.ViewModels;
+
+public enum BulletinType
+{
+	NA,
+	AM,
+	PM,
+}
 
 public abstract class ViewModelBase : INotifyPropertyChanged
 {
@@ -29,4 +35,5 @@ public abstract class ViewModelBase : INotifyPropertyChanged
 	public abstract void OpenInTeXWorks();
 	public abstract void OpenInDefaultPdfViewer();
 	public abstract Task<bool> GeneratePdf();
+	public abstract void RefreshView();
 }

@@ -1,17 +1,17 @@
 ﻿using System.ComponentModel;
 using System.Text;
 using System.Text.RegularExpressions;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace Rpc.TeX.Library
 {
 	public class XeLaTexBuilder
 	{
+		private const string kDateField = "DATE";
+
 		private string _markupText;
 		private bool _dateFound;
 		private ConfessionMarkupInfo _sinConfessionMarkupInfo;
 		private ConfessionMarkupInfo _faithConfessionMarkupInfo;
-		private const string kDateField = "DATE";
 		
 		/// -----------------------------------------------------------------------------------------------------------
 		public XeLaTexBuilder(string pathToTemplate, ConfessionMarkupInfo sinConfessionMarkupInfo,
@@ -32,7 +32,7 @@ namespace Rpc.TeX.Library
 			else if (field.StartsWith("COLLECTION") && text.ToUpper() == "Y")
 			{
 				// In this case, we don't want to insert any text in the .tex file, we want to
-				// remove some to the markup becomes active (i.e. not commented out).
+				// remove some so the markup becomes active (i.e. not commented out).
 				pattern = "%<<COLLECTION>>";
 				text = string.Empty;
 			}
@@ -48,47 +48,22 @@ namespace Rpc.TeX.Library
 				_sinConfessionMarkupInfo.SpaceBetweenParagraphs :
 				_faithConfessionMarkupInfo.SpaceBetweenParagraphs;
 
-			var parMarkup = $"\\par\\vspace{{{paragraphSpacing}}}";
+			var parMarkup = $" \\par\\vspace{{{paragraphSpacing}}}";
 
 			text = text.Trim();
 			text = text.Replace("  ", " ");
-			text = text.Replace($"{Environment.NewLine}{Environment.NewLine}", parMarkup);
-			text = text.Replace($"\n\n", parMarkup);
-			text = text.Replace($"\r\r", parMarkup);
-			text = text.Replace($"{Environment.NewLine}", " ");
+			text = text.Replace($"{Environment.NewLine}", "@");
+			text = text.Replace($"\n", "@");
+			text = text.Replace($"\r", "@");
+			text = text.Replace("@@", parMarkup);
+			text = text.Replace('@', ' ');
 
 			text = TryAddBoldMarkup("Leader:", text);
 			text = TryAddBoldMarkup("Minister:", text);
 			text = TryAddBoldMarkup("Congregation:", text);
 
 			return $"{text}\\par";
-
-			//var lines = text.Split(new[] { "\r\n", "\r", "\n" }, StringSplitOptions.RemoveEmptyEntries);
-			//var bldr = new StringBuilder();
-
-			//foreach (var line in lines)
-			//{
-			//	var confessionLine = $"{line.Trim()} ";
-			//	confessionLine = TryAddBoldMarkup("Leader:", confessionLine);
-			//	confessionLine = TryAddBoldMarkup("Minister:", confessionLine);
-			//	confessionLine = TryAddBoldMarkup("Congregation:", confessionLine);
-
-			//	bldr.Append(confessionLine);
-			//	bldr.AppendLine(@"\par");
-
-			//	if (line != lines.Last())
-			//	{
-			//		var paragraphSpacing = pattern.Contains("SIN") ?
-			//			_sinConfessionMarkupInfo.SpaceBetweenParagraphs :
-			//			_faithConfessionMarkupInfo.SpaceBetweenParagraphs;
-
-			//		bldr.AppendLine($"\\vspace{{{paragraphSpacing}}}");
-			//	}
-			//}
-
-			//return bldr.ToString();
 		}
-
 
 		/// -----------------------------------------------------------------------------------------------------------
 		private string TryAddBoldMarkup(string textToEmbolden, string fullText)
@@ -96,23 +71,12 @@ namespace Rpc.TeX.Library
 			return fullText.Replace(textToEmbolden, $"\\textbf{{{textToEmbolden}}}");
 		}
 
-
-		///// -----------------------------------------------------------------------------------------------------------
-		//private string TryAddBoldMarkup(string textToEmbolden, string confessionLine)
-		//{
-		//	if (!confessionLine.ToLower().StartsWith(textToEmbolden.ToLower()))
-		//		return confessionLine;
-
-		//	confessionLine = confessionLine.Substring(textToEmbolden.Length);
-		//	return $"\\textbf{{{textToEmbolden}}}{confessionLine}";
-		//}
-
 		/// -----------------------------------------------------------------------------------------------------------
 		public string GetMarkup()
 		{
 			if (!_dateFound)
 			{
-				var nextSunday = Utils.GetNextSunday();
+				var nextSunday = Utils.GetFollowingSunday();
 				var pattern = $"<<{kDateField}>>";
 				_markupText = _markupText.Replace(pattern, nextSunday.ToString("dddd, dd MMMM yyyy"));
 			}
