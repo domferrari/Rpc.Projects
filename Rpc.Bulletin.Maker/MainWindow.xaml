@@ -151,16 +151,23 @@
 								</Grid.ColumnDefinitions>
 								<TextBlock Margin="10" VerticalAlignment="Center" Grid.Column="0" Text="{Binding PathToSrcFile}"
 										   Style="{StaticResource MaterialDesignTextBlock}" TextTrimming="CharacterEllipsis" />
-								<Button Style="{StaticResource MaterialDesignRaisedDarkButton}" ToolTip="Save"
-										Grid.Column="1" Margin="0,0,10,0">
-									<md:PackIcon VerticalAlignment="Center" HorizontalAlignment="Center" Kind="ContentSave" />
-								</Button>
+
+								<Menu Grid.Column="1" VerticalAlignment="Center">
+									<MenuItem Command="{Binding SaveSrcFileCmd}" ToolTip="Save">
+										<MenuItem.Header>
+											<md:PackIcon Kind="ContentSave" Width="24" Height="24" />
+										</MenuItem.Header>
+									</MenuItem>
+								</Menu>
 							</Grid>
 						</Border>
+
+						<md:Snackbar MessageQueue="{Binding SnackbarMsgQueue}" />
+
 						<TextBox Margin="0,0,0,-1" Style="{StaticResource MaterialDesignTextBox}" Grid.Row="1" Padding="10,0,0,0"
-								 Text="{Binding SrcFileContent, Mode=TwoWay}" FontFamily="Cascadia Mono" AcceptsReturn="True"
-								 AcceptsTab="True" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto"
-								 CaretBrush="LightGray" />
+								 Text="{Binding SrcFileContent, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+								 FontFamily="Cascadia Mono" AcceptsReturn="True" AcceptsTab="True"
+								 HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" CaretBrush="LightGray" />
 					</Grid>
 				</TabItem>
 				<TabItem x:Name="_tabMorningTeXMarkup" MinHeight="90">

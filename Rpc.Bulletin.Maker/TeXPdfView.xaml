@@ -36,15 +36,30 @@
 
 			<Grid>
 				<Grid.RowDefinitions>
-					<RowDefinition Height="Auto" />
+					<RowDefinition Height="47" />
 					<RowDefinition />
 					<RowDefinition Height="Auto" />
 				</Grid.RowDefinitions>
 				
 				<Border Grid.Row="0" BorderThickness="0,0,0,1" BorderBrush="{DynamicResource MaterialDesignDivider}">
-					<TextBlock Margin="10,10,0,10" VerticalAlignment="Center" Text="{Binding PathToTeXFile}"
+					<Grid>
+						<Grid.ColumnDefinitions>
+							<ColumnDefinition />
+							<ColumnDefinition Width="Auto" />
+						</Grid.ColumnDefinitions>
+						<TextBlock Grid.Column="0" Margin="10,0,0,0" VerticalAlignment="Center" Text="{Binding PathToTeXFile}"
 							   Style="{StaticResource MaterialDesignTextBlock}" TextTrimming="CharacterEllipsis" />
+						<Menu Grid.Column="1" VerticalAlignment="Center">
+							<MenuItem Command="{Binding RefreshTeXCmd}" ToolTip="Refresh TeX Markup">
+								<MenuItem.Header>
+									<md:PackIcon Kind="Refresh" Width="24" Height="24" VerticalAlignment="Center" />
+								</MenuItem.Header>
+							</MenuItem>
+						</Menu>
+					</Grid>
 				</Border>
+				
+				<md:Snackbar MessageQueue="{Binding SnackbarMsgQueue}" />
 
 				<TextBox Grid.Row="1" Style="{StaticResource MaterialDesignTextBox}"
 						 Text="{Binding TeXFileContent, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
@@ -59,7 +74,7 @@
 							<ColumnDefinition/>
 							<ColumnDefinition Width="Auto"/>
 						</Grid.ColumnDefinitions>
-						<TextBlock Grid.Column="0" Text="GENERATOR OUTPUT" FontSize="10" VerticalAlignment="Center"
+						<TextBlock Grid.Column="0" Text="PDF GENERATOR OUTPUT" FontSize="10" VerticalAlignment="Center"
 								   Style="{StaticResource MaterialDesignBody1TextBlock}" Margin="5,3,0,3" />
 						<ToggleButton Grid.Column="2" Foreground="White"
 									  Style="{StaticResource MaterialDesignExpanderToggleButton}"
@@ -73,12 +88,12 @@
 		
 		<Grid Grid.Column="2">
 			<Grid.RowDefinitions>
-				<RowDefinition Height="Auto" />
+				<RowDefinition Height="48" />
 				<RowDefinition />
 			</Grid.RowDefinitions>
 
 			<Border Grid.Row="0" BorderThickness="0,1" BorderBrush="{DynamicResource MaterialDesignDivider}">
-				<TextBlock Margin="10,10,0,10" VerticalAlignment="Center" Text="{Binding PathToPdfFile}"
+				<TextBlock Margin="10,0,0,0" VerticalAlignment="Center" Text="{Binding PathToPdfFile}"
 						   Style="{StaticResource MaterialDesignTextBlock}" TextTrimming="CharacterEllipsis" />
 			</Border>
 			<wv2:WebView2 Grid.Row="1" Name="_webView" Source="about:blank" DefaultBackgroundColor=""/>

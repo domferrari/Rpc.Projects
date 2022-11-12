@@ -101,14 +101,22 @@ Prayer of Adoration and Invocation\par
 \end{tabbing}
 
 \vspace{8pt}
-\begin{tabbing}
-\=\hspace*{.5\linewidth}\=\hspace{.5\linewidth}\=\kill \par
-\> \textalign[l]{Corporate Confession of Sin} \>  \> \textalign[r]{\emph{<<CONFESSION-SIN-ATTRIBUTION>>}} \par
-\end{tabbing}
 
 % =======================================================
+
+\begin{tabbing}
+\=\hspace*{.5\linewidth}\=\hspace{.5\linewidth}\=\kill \par
+\> \textalign[l]{Corporate Confession of Sin} \>  \> \textalign[r]{\emph{<<CONFESSION-SIN-ATTRIBUTION-1>>}}
+%2-LINE-CS-ATTRIBUTION\\ \> \>  \> \textalign[r]{\emph{<<CONFESSION-SIN-ATTRIBUTION-2>>}}
+\end{tabbing}
+
 \vspace{6pt}
-\vbox to 3.35in
+
+% vbox height = 249pt when there's a one line confession of sin attribution
+% vbox height = 236pt when there's a one line confession of sin attribution
+
+%1-LINE-CS-ATTRIBUTION\vbox to 249pt
+%2-LINE-CS-ATTRIBUTION\vbox to 236pt
 {
 \leftskip0.05in\relax
 \rightskip0.05in\relax
@@ -179,7 +187,7 @@ Prayer for Illumination\par
 \vspace{4pt}
 \begin{tabbing}
 \=\hspace*{.5\linewidth}\=\hspace{.5\linewidth}\=\kill \par
-\> \textalign[l]{*Hymn of Response: <<HYMN-RESPONSE-NUMBER>>} \> \> \textalign[r]{\emph{<<HYMN-RESPONSE-NAME>>}} \par
+\> \textalign[l]{*Hymn of Response: <<HYMN-RESPONSE-NUMBER>>} \> \> \textalign[r]{\emph{<<HYMN-RESPONSE-NAME>>}}\par
 \end{tabbing}
 
 %NO-NICENE-CREED\vspace{8pt}
@@ -196,18 +204,21 @@ The Collection\par
 \leftskip0in\relax
 \setmainfont{Book Antiqua}
 
+% =======================================================
+
 %NO-NICENE-CREED\vspace{8pt}
 %NICENE-CREED\vspace{5pt}
 \begin{tabbing}
 \=\hspace*{.5\linewidth}\=\hspace{.5\linewidth}\=\kill \par
-\> \textalign[l]{*Confession of Faith} \>  \> \textalign[r]{\emph{<<CONFESSION-FAITH-ATTRIBUTION>>}} \par
+\> \textalign[l]{*Confession of Faith} \>  \> \textalign[r]{\emph{<<CONFESSION-FAITH-ATTRIBUTION-1>>}}
+%2-LINE-CF-ATTRIBUTION\\ \> \>  \> \textalign[r]{\emph{<<CONFESSION-FAITH-ATTRIBUTION-2>>}}
 \end{tabbing}
 
-% =======================================================
 %NO-NICENE-CREED\vspace{6pt}
 %NICENE-CREED\vspace{3pt}
 
-%NO-NICENE-CREED\vbox to 2.7in
+%1-LINE-CF-ATTRIBUTION\vbox to 198pt
+%2-LINE-CF-ATTRIBUTION\vbox to 184pt
 %NICENE-CREED\vbox to 3in
 {
 \leftskip0.07in\relax

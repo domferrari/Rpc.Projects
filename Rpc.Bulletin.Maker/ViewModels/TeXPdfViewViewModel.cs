@@ -22,6 +22,7 @@ namespace Rpc.Bulletin.Maker.ViewModels
 		private readonly Action<string> _generatePdfOutputReadyProvider;
 
 		public BulletinType BulletinType { get; }
+		public Command RefreshTeXCmd { get; }
 
 		public override bool CanGeneratePdf => File.Exists(_pathToTeXFile);
 		public override bool CanOpenPdfExternally => File.Exists(_pathToPdfFile) && _isPdfLoaded;
@@ -41,6 +42,8 @@ namespace Rpc.Bulletin.Maker.ViewModels
 			_generatePdfOutputReadyProvider = generatePdfOutputReadyProvider;
 
 			ResetSource(sundayDateAsStr, pathToSrcFile);
+
+			RefreshTeXCmd = new Command(_ => LoadOrGenerateTeXFile(true), _ => true);
 		}
 
 		/// -----------------------------------------------------------------------------------------------------------
@@ -154,6 +157,8 @@ namespace Rpc.Bulletin.Maker.ViewModels
 			parser.ReadAndProcessText(section, processor.ProcessText);
 			TeXFileContent = processor.GetMarkup();
 			File.WriteAllText(PathToTeXFile, TeXFileContent);
+
+			SnackbarMsgQueue.Enqueue($"TeX File '{Path.GetFileName(PathToTeXFile)}' Recreated");
 		}
 
 		/// -----------------------------------------------------------------------------------------------------------

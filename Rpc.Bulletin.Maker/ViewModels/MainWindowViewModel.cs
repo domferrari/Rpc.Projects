@@ -18,6 +18,7 @@ public enum View
 public class MainWindowViewModel : ViewModelBase
 {
 	private string _pathToSrcFile;
+	private string _prevFileContent;
 	private string _srcFileContent;
 	private string _sundayDateAsStr;
 	private DateTime _sundayDate;
@@ -26,6 +27,7 @@ public class MainWindowViewModel : ViewModelBase
 
 	public TeXPdfViewViewModel MorningViewModel { get; }
 	public TeXPdfViewViewModel EveningViewModel { get; }
+	public Command SaveSrcFileCmd { get; }
 	public Command GeneratePdfCmd { get; }
 	public Command OpenSrcFileCmd { get; }
 	public Command OpenInDefaultPdfViewerCmd { get; }
@@ -62,6 +64,7 @@ public class MainWindowViewModel : ViewModelBase
 
 		_viewModels = new[] { (ViewModelBase)this, MorningViewModel, EveningViewModel };
 
+		SaveSrcFileCmd = new Command(_ => SaveSourceFile(), _ => true);
 		OpenSrcFileCmd = new Command(_ => OpenSourceFile(), _ => true);
 		OpenInTeXWorksCmd = new Command(_ => OpenInTeXWorks(), _ => CanOpenTeXExternally);
 		OpenInDefaultPdfViewerCmd = new Command(_ => OpenInDefaultPdfViewer(), _ => CanOpenPdfExternally);
@@ -239,8 +242,29 @@ public class MainWindowViewModel : ViewModelBase
 			else
 			{
 				SrcFileContent = File.ReadAllText(PathToSrcFile);
+				_prevFileContent = SrcFileContent;
 				return;
 			}
+		}
+	}
+
+	/// -----------------------------------------------------------------------------------------------------------
+	private void SaveSourceFile()
+	{
+		if (_prevFileContent == _srcFileContent)
+			return;
+
+		try
+		{
+			File.WriteAllText(PathToSrcFile, SrcFileContent);
+			SnackbarMsgQueue.Enqueue($"File '{Path.GetFileName(PathToSrcFile)}' saved");
+			_prevFileContent = SrcFileContent;
+			MorningViewModel.LoadOrGenerateTeXFile(true);
+			EveningViewModel.LoadOrGenerateTeXFile(true);
+		}
+		catch (Exception e)
+		{
+			DialogContent.Show($"Error: {e.Message}", DialogType.Ok, _dlgHost);
 		}
 	}
 

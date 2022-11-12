@@ -10,16 +10,30 @@ namespace Rpc.TeX.Library
 
 	public class ConfessionMarkupInfo
 	{
+		private string _spaceBetweenParagraphs = "8pt";
+		private bool _useSmallFont;
+
 		public ConfessionType ConfessionType;
-		public bool UseSmallFont { get; set; }
+		public bool HasTwoLineAttribution { get; set; }
 		public bool NiceneCreedMode { get; set; }
+
+		/// -----------------------------------------------------------------------------------------------------------
+		public bool UseSmallFont
+		{
+			get => NiceneCreedMode || _useSmallFont;
+			set => _useSmallFont = value;
+		}
 
 		/// -----------------------------------------------------------------------------------------------------------
 		/// <summary>
 		/// Normally use '8pt'. For long confessions, try '6pt'
 		/// </summary>
 		/// -----------------------------------------------------------------------------------------------------------
-		public string SpaceBetweenParagraphs { get; set; }
+		public string SpaceBetweenParagraphs
+		{
+			get => NiceneCreedMode ? "3pt" : _spaceBetweenParagraphs;
+			set => _spaceBetweenParagraphs = value;
+		}
 
 		/// -----------------------------------------------------------------------------------------------------------
 		private ConfessionMarkupInfo()
@@ -54,12 +68,6 @@ namespace Rpc.TeX.Library
 					NiceneCreedMode = bool.Parse(match.Groups["niceneMode"].Value),
 				};
 			}
-		}
-
-		/// -----------------------------------------------------------------------------------------------------------
-		public static ConfessionMarkupInfo CreateForNiceneCreed()
-		{
-			return new ConfessionMarkupInfo(ConfessionType.Faith, true, "3pt") {  NiceneCreedMode = true };
 		}
 
 		/// -----------------------------------------------------------------------------------------------------------

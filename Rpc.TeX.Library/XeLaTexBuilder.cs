@@ -1,8 +1,4 @@
-﻿using System.ComponentModel;
-using System.Text;
-using System.Text.RegularExpressions;
-
-namespace Rpc.TeX.Library
+﻿namespace Rpc.TeX.Library
 {
 	public class XeLaTexBuilder
 	{
@@ -27,7 +23,11 @@ namespace Rpc.TeX.Library
 		{
 			var pattern = $"<<{field.Trim()}>>";
 
-			if (field.StartsWith("CONFESSION") && !field.EndsWith("ATTRIBUTION"))
+			if (field.Trim() == "CONFESSION-SIN-ATTRIBUTION-2")
+				_sinConfessionMarkupInfo.HasTwoLineAttribution = true;
+			if (field.Trim() == "CONFESSION-FAITH-ATTRIBUTION-2")
+				_faithConfessionMarkupInfo.HasTwoLineAttribution = true;
+			else if (field.StartsWith("CONFESSION") && !field.Contains("ATTRIBUTION"))
 				text = GetConfessionMarkup(field, text);
 			else if (field.StartsWith("COLLECTION") && text.ToUpper() == "Y")
 			{
@@ -93,8 +93,19 @@ namespace Rpc.TeX.Library
 			text = _faithConfessionMarkupInfo.NiceneCreedMode ? "%NICENE-CREED" : "%NO-NICENE-CREED";
 			_markupText = _markupText.Replace(text, string.Empty);
 
-			_markupText = _markupText.Replace("<<CONFESSION-SIN-ATTRIBUTION>>", string.Empty);
-			_markupText = _markupText.Replace("<<CONFESSION-FAITH-ATTRIBUTION>>", string.Empty);
+			text = $"%{(_sinConfessionMarkupInfo.HasTwoLineAttribution ? "2" : "1")}-LINE-CS-ATTRIBUTION";
+			_markupText = _markupText.Replace(text, string.Empty);
+
+			if (!_faithConfessionMarkupInfo.NiceneCreedMode)
+			{
+				text = $"%{(_faithConfessionMarkupInfo.HasTwoLineAttribution ? "2" : "1")}-LINE-CF-ATTRIBUTION";
+				_markupText = _markupText.Replace(text, string.Empty);
+			}
+
+			_markupText = _markupText.Replace("<<CONFESSION-SIN-ATTRIBUTION-1>>", string.Empty);
+			_markupText = _markupText.Replace("<<CONFESSION-SIN-ATTRIBUTION-2>>", string.Empty);
+			_markupText = _markupText.Replace("<<CONFESSION-FAITH-ATTRIBUTION-1>>", string.Empty);
+			_markupText = _markupText.Replace("<<CONFESSION-FAITH-ATTRIBUTION-2>>", string.Empty);
 
 			return _markupText;
 		}
