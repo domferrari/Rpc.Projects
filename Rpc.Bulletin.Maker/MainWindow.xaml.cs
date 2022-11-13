@@ -16,7 +16,8 @@ public partial class MainWindow : Window
 
 		DataContext = new MainWindowViewModel(_dlgHost,
 			_tpMorningView.UpdateGeneratePdfOutput, _tpMorningView.LoadPdfFile,
-			_tpEveningView.UpdateGeneratePdfOutput, _tpEveningView.LoadPdfFile);
+			_tpEveningView.UpdateGeneratePdfOutput, _tpEveningView.LoadPdfFile,
+			() => _tpEmailView.Password);
 	}
 
 	/// -----------------------------------------------------------------------------------------------------------

@@ -32,9 +32,9 @@ namespace Rpc.Bulletin.Maker.ViewModels
 		public override bool CanSetNiceneCreedMode => BulletinType == BulletinType.AM;
 
 		/// -----------------------------------------------------------------------------------------------------------
-		public TeXPdfViewViewModel(BulletinType bulletinType, string sundayDateAsStr, string pathToSrcFile,
-			DialogHost dlgHost, Action<string> generatePdfOutputReadyProvider,
-			Action<string, Action> pdfLoadingProvider)
+		public TeXPdfViewViewModel(DialogHost dlgHost, BulletinType bulletinType, string sundayDateAsStr,
+			string pathToSrcFile, Action<string> generatePdfOutputReadyProvider,
+			Action<string, Action> pdfLoadingProvider) : base(dlgHost)
 		{
 			BulletinType = bulletinType;
 			_dlgHost = dlgHost;

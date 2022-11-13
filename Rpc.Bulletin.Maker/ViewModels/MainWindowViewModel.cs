@@ -22,11 +22,11 @@ public class MainWindowViewModel : ViewModelBase
 	private string _srcFileContent;
 	private string _sundayDateAsStr;
 	private DateTime _sundayDate;
-	private DialogHost _dlgHost;
 	private int _selectedViewIndex;
 
 	public TeXPdfViewViewModel MorningViewModel { get; }
 	public TeXPdfViewViewModel EveningViewModel { get; }
+	public EmailViewModel EmailViewModel { get; }
 	public Command SaveSrcFileCmd { get; }
 	public Command GeneratePdfCmd { get; }
 	public Command OpenSrcFileCmd { get; }
@@ -41,7 +41,8 @@ public class MainWindowViewModel : ViewModelBase
 		Action<string> confessionSinGeneratePdfOutputReadyProvider,
 		Action<string, Action> confessionSinPdfLoadingProvider,
 		Action<string> confessionFaithGeneratePdfOutputReadyProvider,
-		Action<string, Action> confessionFaithPdfLoadingProvider)
+		Action<string, Action> confessionFaithPdfLoadingProvider,
+		Func<string> emailPasswordProvider) : base(dlgHost)
 	{
 		if (!Directory.Exists(Properties.Settings.Default.SourceFilesFolder))
 			Directory.CreateDirectory(Properties.Settings.Default.SourceFilesFolder);
@@ -54,15 +55,17 @@ public class MainWindowViewModel : ViewModelBase
 
 		TryFindNewSourceFile();
 
-		_dlgHost = dlgHost;
+		MorningViewModel = new TeXPdfViewViewModel(dlgHost, BulletinType.AM, _sundayDateAsStr, _pathToSrcFile,
+			confessionSinGeneratePdfOutputReadyProvider, confessionSinPdfLoadingProvider);
 		
-		MorningViewModel = new TeXPdfViewViewModel(BulletinType.AM, _sundayDateAsStr, _pathToSrcFile,
-			dlgHost, confessionSinGeneratePdfOutputReadyProvider, confessionSinPdfLoadingProvider);
-		
-		EveningViewModel = new TeXPdfViewViewModel(BulletinType.PM, _sundayDateAsStr, _pathToSrcFile,
-			dlgHost, confessionFaithGeneratePdfOutputReadyProvider, confessionFaithPdfLoadingProvider);
+		EveningViewModel = new TeXPdfViewViewModel(dlgHost, BulletinType.PM, _sundayDateAsStr, _pathToSrcFile,
+			confessionFaithGeneratePdfOutputReadyProvider, confessionFaithPdfLoadingProvider);
 
-		_viewModels = new[] { (ViewModelBase)this, MorningViewModel, EveningViewModel };
+		EmailViewModel = new EmailViewModel(dlgHost,
+			() => (MorningViewModel.PathToPdfFile, EveningViewModel.PathToPdfFile),
+			emailPasswordProvider);
+
+		_viewModels = new[] { (ViewModelBase)this, MorningViewModel, EveningViewModel, EmailViewModel };
 
 		SaveSrcFileCmd = new Command(_ => SaveSourceFile(), _ => true);
 		OpenSrcFileCmd = new Command(_ => OpenSourceFile(), _ => true);

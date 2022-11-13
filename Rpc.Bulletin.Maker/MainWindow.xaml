@@ -127,7 +127,8 @@
 			</ToolBarTray>
 
 			<TabControl Grid.Row="2" Style="{StaticResource MaterialDesignNavigationRailTabControl}"
-						md:NavigationRailAssist.ShowSelectionBackground="True" TabStripPlacement="Left"
+						md:NavigationRailAssist.ShowSelectionBackground="True"
+						md:ElevationAssist.Elevation="Dp4" TabStripPlacement="Left"
 						SelectedIndex="{Binding SelectedViewIndex, Mode=TwoWay}">
 
 				<TabItem x:Name="_tabSrcFile" MinHeight="90" ToolTip="Bulletin Source Information">
@@ -183,12 +184,21 @@
 				<TabItem x:Name="_tabEveningTeXMarkup" MinHeight="90">
 					<TabItem.Header>
 						<StackPanel>
-							<md:PackIcon Width="24" Height="24" HorizontalAlignment="Center" Kind="MoonWaningCrescent" Foreground="#FF19C8B4" />
+							<md:PackIcon Width="24" Height="24" HorizontalAlignment="Center" Kind="MoonWaningCrescent" Foreground="#FF03FFCB" />
 							<TextBlock HorizontalAlignment="Center" Text="Evening" Margin="0,5,0,0" Foreground="White" />
 							<TextBlock HorizontalAlignment="Center" Text="TeX File" Margin="0,3,0,0" Foreground="White" />
 						</StackPanel>
 					</TabItem.Header>
 					<local:TeXPdfView x:Name="_tpEveningView" DataContext="{Binding EveningViewModel}" />
+				</TabItem>
+				<TabItem x:Name="_tabEmail" MinHeight="90">
+					<TabItem.Header>
+						<StackPanel>
+							<md:PackIcon Width="24" Height="24" HorizontalAlignment="Center" Kind="Send" Foreground="#FF37FF00" />
+							<TextBlock HorizontalAlignment="Center" Text="Email" Margin="0,5,0,0" Foreground="White" />
+						</StackPanel>
+					</TabItem.Header>
+					<local:EmailView x:Name="_tpEmailView" DataContext="{Binding EmailViewModel}" />
 				</TabItem>
 			</TabControl>
 		</Grid>

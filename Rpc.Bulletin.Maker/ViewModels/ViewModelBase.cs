@@ -16,6 +16,8 @@ public enum BulletinType
 
 public abstract class ViewModelBase : INotifyPropertyChanged
 {
+	protected DialogHost _dlgHost;
+
 	public string[] AvailableFontSizes { get; } = new[] { "Normal", "Small" };
 	public string[] AvailableParaSpacing { get; } = new[] { "8pt", "7pt", "6pt", "5pt", "4pt", "3pt" };
 
@@ -48,4 +50,9 @@ public abstract class ViewModelBase : INotifyPropertyChanged
 	public abstract void OpenInDefaultPdfViewer();
 	public abstract Task<bool> GeneratePdf();
 	public abstract void RefreshView();
+
+	public ViewModelBase(DialogHost dlgHost)
+	{
+		_dlgHost = dlgHost;
+	}
 }

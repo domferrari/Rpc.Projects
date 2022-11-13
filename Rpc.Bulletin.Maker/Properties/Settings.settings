@@ -23,5 +23,52 @@
     <Setting Name="TeXWorksExe" Type="System.String" Scope="Application">
       <Value Profile="(Default)">C:\Users\david\Desktop\RPC Bulletin Builder\miktex-portable\texmfs\install\miktex\bin\x64\texworks.exe</Value>
     </Setting>
+    <Setting Name="ReviewEmailRecipients" Type="System.String" Scope="User">
+      <Value Profile="(Default)">joseph.rolison@gmail.com</Value>
+    </Setting>
+    <Setting Name="ReviewEmailSubject" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Bulletin for your review</Value>
+    </Setting>
+    <Setting Name="ReviewEmailBody" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Hi Joe,
+
+Here are the bulletin(s) for your review.
+
+Thank you,
+David</Value>
+    </Setting>
+    <Setting Name="EmailFrom" Type="System.String" Scope="User">
+      <Value Profile="(Default)">david.olson63@gmail.com</Value>
+    </Setting>
+    <Setting Name="EmailRecipients" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="EmailSubject" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Sundays Bulletin</Value>
+    </Setting>
+    <Setting Name="EmailBody" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Hi all,
+
+Attached are the bulletin(s) for this Sunday.
+ 
+Please let me know of you have any questions.
+ 
+David</Value>
+    </Setting>
+    <Setting Name="EmailSmtpServer" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="EmailUserId" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="EmailPassword" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="EmailPort" Type="System.String" Scope="User">
+      <Value Profile="(Default)">587</Value>
+    </Setting>
+    <Setting Name="UseSsl" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

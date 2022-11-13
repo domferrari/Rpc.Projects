@@ -89,5 +89,150 @@ namespace Rpc.Bulletin.Maker.Properties {
                 return ((string)(this["TeXWorksExe"]));
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("joseph.rolison@gmail.com")]
+        public string ReviewEmailRecipients {
+            get {
+                return ((string)(this["ReviewEmailRecipients"]));
+            }
+            set {
+                this["ReviewEmailRecipients"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Bulletin for your review")]
+        public string ReviewEmailSubject {
+            get {
+                return ((string)(this["ReviewEmailSubject"]));
+            }
+            set {
+                this["ReviewEmailSubject"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Hi Joe,\r\n\r\nHere are the bulletin(s) for your review.\r\n\r\nThank you,\r\nDavid")]
+        public string ReviewEmailBody {
+            get {
+                return ((string)(this["ReviewEmailBody"]));
+            }
+            set {
+                this["ReviewEmailBody"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("david.olson63@gmail.com")]
+        public string EmailFrom {
+            get {
+                return ((string)(this["EmailFrom"]));
+            }
+            set {
+                this["EmailFrom"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string EmailRecipients {
+            get {
+                return ((string)(this["EmailRecipients"]));
+            }
+            set {
+                this["EmailRecipients"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Sundays Bulletin")]
+        public string EmailSubject {
+            get {
+                return ((string)(this["EmailSubject"]));
+            }
+            set {
+                this["EmailSubject"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Hi all,\r\n\r\nAttached are the bulletin(s) for this Sunday.\r\n \r\nPlease let me know o" +
+            "f you have any questions.\r\n \r\nDavid")]
+        public string EmailBody {
+            get {
+                return ((string)(this["EmailBody"]));
+            }
+            set {
+                this["EmailBody"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string EmailSmtpServer {
+            get {
+                return ((string)(this["EmailSmtpServer"]));
+            }
+            set {
+                this["EmailSmtpServer"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string EmailUserId {
+            get {
+                return ((string)(this["EmailUserId"]));
+            }
+            set {
+                this["EmailUserId"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string EmailPassword {
+            get {
+                return ((string)(this["EmailPassword"]));
+            }
+            set {
+                this["EmailPassword"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("587")]
+        public string EmailPort {
+            get {
+                return ((string)(this["EmailPort"]));
+            }
+            set {
+                this["EmailPort"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool UseSsl {
+            get {
+                return ((bool)(this["UseSsl"]));
+            }
+            set {
+                this["UseSsl"] = value;
+            }
+        }
     }
 }
