@@ -55,10 +55,10 @@ public class MainWindowViewModel : ViewModelBase
 
 		TryFindNewSourceFile();
 
-		MorningViewModel = new TeXPdfViewViewModel(dlgHost, BulletinType.AM, _sundayDateAsStr, _pathToSrcFile,
+		MorningViewModel = new TeXPdfViewViewModel(dlgHost, BulletinType.AM, _sundayDate, _pathToSrcFile,
 			confessionSinGeneratePdfOutputReadyProvider, confessionSinPdfLoadingProvider);
 		
-		EveningViewModel = new TeXPdfViewViewModel(dlgHost, BulletinType.PM, _sundayDateAsStr, _pathToSrcFile,
+		EveningViewModel = new TeXPdfViewViewModel(dlgHost, BulletinType.PM, _sundayDate, _pathToSrcFile,
 			confessionFaithGeneratePdfOutputReadyProvider, confessionFaithPdfLoadingProvider);
 
 		EmailViewModel = new EmailViewModel(dlgHost,
@@ -299,8 +299,8 @@ public class MainWindowViewModel : ViewModelBase
 		_sundayDateAsStr = $"{_sundayDate:yyyy-MM-dd}";
 		PathToSrcFile = openDlg.FileName;
 		SrcFileContent = File.ReadAllText(PathToSrcFile);
-		MorningViewModel.ResetSource(_sundayDateAsStr, PathToSrcFile, true);
-		EveningViewModel.ResetSource(_sundayDateAsStr, PathToSrcFile, true);
+		MorningViewModel.ResetSource(_sundayDate, PathToSrcFile, true);
+		EveningViewModel.ResetSource(_sundayDate, PathToSrcFile, true);
 		RefreshView();
 	}
 

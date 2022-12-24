@@ -10,6 +10,7 @@ namespace Rpc.Bulletin.Maker.ViewModels
 {
 	public class TeXPdfViewViewModel : ViewModelBase
 	{
+		private DateTime _sundayDate;
 		private string _sundayDateAsStr;
 		private string _pathToSrcFile;
 		private string _pathToPdfFile;
@@ -17,7 +18,6 @@ namespace Rpc.Bulletin.Maker.ViewModels
 		private string _teXFileContent;
 		private bool _isOutputPanelOpen;
 		private bool _isPdfLoaded;
-		private readonly DialogHost _dlgHost;
 		private readonly Action<string, Action> _pdfLoadingProvider;
 		private readonly Action<string> _generatePdfOutputReadyProvider;
 
@@ -32,25 +32,25 @@ namespace Rpc.Bulletin.Maker.ViewModels
 		public override bool CanSetNiceneCreedMode => BulletinType == BulletinType.AM;
 
 		/// -----------------------------------------------------------------------------------------------------------
-		public TeXPdfViewViewModel(DialogHost dlgHost, BulletinType bulletinType, string sundayDateAsStr,
+		public TeXPdfViewViewModel(DialogHost dlgHost, BulletinType bulletinType, DateTime sundayDate,
 			string pathToSrcFile, Action<string> generatePdfOutputReadyProvider,
 			Action<string, Action> pdfLoadingProvider) : base(dlgHost)
 		{
 			BulletinType = bulletinType;
-			_dlgHost = dlgHost;
 			_pdfLoadingProvider = pdfLoadingProvider;
 			_generatePdfOutputReadyProvider = generatePdfOutputReadyProvider;
 
-			ResetSource(sundayDateAsStr, pathToSrcFile);
+			ResetSource(sundayDate, pathToSrcFile);
 
 			RefreshTeXCmd = new Command(_ => LoadOrGenerateTeXFile(true), _ => true);
 		}
 
 		/// -----------------------------------------------------------------------------------------------------------
-		public void ResetSource(string sundayDateAsStr, string pathToSrcFile, bool refreshView = false)
+		public void ResetSource(DateTime sundayDate, string pathToSrcFile, bool refreshView = false)
 		{
 			_pathToSrcFile = pathToSrcFile;
-			_sundayDateAsStr = sundayDateAsStr;
+			_sundayDate = sundayDate;
+			_sundayDateAsStr = $"{sundayDate:yyyy-MM-dd}";
 
 			TrySetPaths();
 
@@ -152,7 +152,7 @@ namespace Rpc.Bulletin.Maker.ViewModels
 				Properties.Settings.Default.TeXMorningBulletinTemplate :
 				Properties.Settings.Default.TeXEveningBulletinTemplate;
 
-			var processor = new XeLaTexBuilder(template, ConfessionSinMarkupInfo, ConfessionFaithMarkupInfo);
+			var processor = new XeLaTexBuilder(template, _sundayDate, ConfessionSinMarkupInfo, ConfessionFaithMarkupInfo);
 
 			parser.ReadAndProcessText(section, processor.ProcessText);
 			TeXFileContent = processor.GetMarkup();
