@@ -5,14 +5,15 @@
 		private const string kDateField = "DATE";
 
 		private string _markupText;
-		private bool _dateFound;
+		private DateTime _sundayDate;
 		private ConfessionMarkupInfo _sinConfessionMarkupInfo;
 		private ConfessionMarkupInfo _faithConfessionMarkupInfo;
 		
 		/// -----------------------------------------------------------------------------------------------------------
-		public XeLaTexBuilder(string pathToTemplate, ConfessionMarkupInfo sinConfessionMarkupInfo,
-			ConfessionMarkupInfo faithConfessionMarkupInfo)
+		public XeLaTexBuilder(string pathToTemplate, DateTime sundayDate,
+			ConfessionMarkupInfo sinConfessionMarkupInfo, ConfessionMarkupInfo faithConfessionMarkupInfo)
 		{
+			_sundayDate = sundayDate;
 			_sinConfessionMarkupInfo = sinConfessionMarkupInfo;
 			_faithConfessionMarkupInfo = faithConfessionMarkupInfo;
 			_markupText = File.ReadAllText(pathToTemplate);
@@ -33,11 +34,10 @@
 			{
 				// In this case, we don't want to insert any text in the .tex file, we want to
 				// remove some so the markup becomes active (i.e. not commented out).
-				pattern = "%<<COLLECTION>>";
+				pattern = "%<<REM-COLLECTION>>";
 				text = string.Empty;
 			}
 
-			_dateFound = _dateFound || (field == kDateField && !string.IsNullOrWhiteSpace(text));
 			_markupText = _markupText.Replace(pattern, text.Trim());
 		}
 
@@ -61,6 +61,7 @@
 			text = TryAddBoldMarkup("Leader:", text);
 			text = TryAddBoldMarkup("Minister:", text);
 			text = TryAddBoldMarkup("Congregation:", text);
+			text = TryAddBoldMarkup("People:", text);
 
 			return $"{text}\\par";
 		}
@@ -74,12 +75,9 @@
 		/// -----------------------------------------------------------------------------------------------------------
 		public string GetMarkup()
 		{
-			if (!_dateFound)
-			{
-				var nextSunday = Utils.GetFollowingSunday();
-				var pattern = $"<<{kDateField}>>";
-				_markupText = _markupText.Replace(pattern, nextSunday.ToString("dddd, dd MMMM yyyy"));
-			}
+			var nextSunday = _sundayDate == default ? Utils.GetFollowingSunday() : _sundayDate;
+			var pattern = $"<<{kDateField}>>";
+			_markupText = _markupText.Replace(pattern, nextSunday.ToString("dddd, dd MMMM yyyy"));
 
 			var text = _sinConfessionMarkupInfo.UseSmallFont ? @"\small" : string.Empty;
 			_markupText = _markupText.Replace("<<MAKE-CS-SMALL>>", text);
@@ -106,6 +104,12 @@
 			_markupText = _markupText.Replace("<<CONFESSION-SIN-ATTRIBUTION-2>>", string.Empty);
 			_markupText = _markupText.Replace("<<CONFESSION-FAITH-ATTRIBUTION-1>>", string.Empty);
 			_markupText = _markupText.Replace("<<CONFESSION-FAITH-ATTRIBUTION-2>>", string.Empty);
+
+			if (!_markupText.Contains("<<HYMN-SING-3-NUMBER>>"))
+				_markupText = _markupText.Replace("%<<REM-HYMN3>>", string.Empty);
+
+			if (!_markupText.Contains("<<CONFESSION-FAITH>>"))
+				_markupText = _markupText.Replace("%<<REM-CONFESSION>>", string.Empty);
 
 			return _markupText;
 		}

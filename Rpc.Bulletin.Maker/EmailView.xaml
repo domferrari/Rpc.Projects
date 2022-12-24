@@ -71,7 +71,7 @@
 			<Border Grid.Column="1" Grid.Row="5" Grid.ColumnSpan="3" BorderThickness="1" Margin="0,0,0,15"
 					BorderBrush="{StaticResource MaterialDesignDivider}">
 				<TextBox Grid.Column="1" Grid.Row="0" Padding="10" FontSize="16" Text="{Binding EmailBody, Mode=TwoWay}" CaretBrush="LightGray"
-						 AcceptsReturn="True" AcceptsTab="True" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" />
+						 AcceptsReturn="True" AcceptsTab="True" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" TextWrapping="Wrap" />
 			</Border>
 
 			<TextBlock Grid.Column="0" Grid.Row="6" Text="User Id:" VerticalAlignment="Center" Margin="0,10,10,15" />
