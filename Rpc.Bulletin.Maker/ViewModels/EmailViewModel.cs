@@ -18,9 +18,6 @@ namespace Rpc.Bulletin.Maker.ViewModels
 		private Func<(string morningPdf, string eveningPdf)> _pdfFileNameProvider;
 		private Func<string> _emailPasswordProvider;
 
-		public string MorningPdfFileName => Path.GetFileName(_pdfFileNameProvider?.Invoke().morningPdf);
-		public string EveningPdfFileName => Path.GetFileName(_pdfFileNameProvider?.Invoke().eveningPdf);
-
 		public Visibility MorningPdfFileNameVisible =>
 			string.IsNullOrWhiteSpace(MorningPdfFileName) ? Visibility.Collapsed : Visibility.Visible;
 
@@ -39,8 +36,28 @@ namespace Rpc.Bulletin.Maker.ViewModels
 			SendEmailCmd = new Command(_ => SendEmail(), _ => true);
 		}
 
-		/// -----------------------------------------------------------------------------------------------------------
-		public string EmailSmtpServer
+        /// -----------------------------------------------------------------------------------------------------------
+        public string MorningPdfFileName
+        {
+            get
+            {
+                var path = _pdfFileNameProvider?.Invoke().morningPdf;
+                return File.Exists(path) ? Path.GetFileName(path) : null;
+            }
+        }
+
+        /// -----------------------------------------------------------------------------------------------------------
+        public string EveningPdfFileName
+        {
+            get
+            {
+                var path = _pdfFileNameProvider?.Invoke().eveningPdf;
+                return File.Exists(path) ? Path.GetFileName(path) : null;
+            }
+        }
+
+        /// -----------------------------------------------------------------------------------------------------------
+        public string EmailSmtpServer
 		{
 			get => Properties.Settings.Default.EmailSmtpServer;
 			set
@@ -219,13 +236,13 @@ namespace Rpc.Bulletin.Maker.ViewModels
 				var contentType = new ContentType("application", "pdf");
 				var fileNames = _pdfFileNameProvider();
 
-				if (!string.IsNullOrWhiteSpace(fileNames.morningPdf))
+				if (!string.IsNullOrWhiteSpace(fileNames.morningPdf) && File.Exists(fileNames.morningPdf))
 				{
 					var bytes = File.ReadAllBytes(fileNames.morningPdf);
 					bldr.Attachments.Add(Path.GetFileName(fileNames.morningPdf), bytes, contentType);
 				}
 
-				if (!string.IsNullOrWhiteSpace(fileNames.eveningPdf))
+				if (!string.IsNullOrWhiteSpace(fileNames.eveningPdf) && File.Exists(fileNames.eveningPdf))
 				{
 					var bytes = File.ReadAllBytes(fileNames.eveningPdf);
 					bldr.Attachments.Add(Path.GetFileName(fileNames.eveningPdf), bytes, contentType);

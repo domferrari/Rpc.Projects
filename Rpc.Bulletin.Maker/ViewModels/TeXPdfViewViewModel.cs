@@ -156,9 +156,12 @@ namespace Rpc.Bulletin.Maker.ViewModels
 
 			parser.ReadAndProcessText(section, processor.ProcessText);
 			TeXFileContent = processor.GetMarkup();
-			File.WriteAllText(PathToTeXFile, TeXFileContent);
 
-			SnackbarMsgQueue.Enqueue($"TeX File '{Path.GetFileName(PathToTeXFile)}' Recreated");
+			if (TeXFileContent != XeLaTexBuilder.EMPTY_SRC_DATA)
+			{
+				File.WriteAllText(PathToTeXFile, TeXFileContent);
+				SnackbarMsgQueue.Enqueue($"TeX File '{Path.GetFileName(PathToTeXFile)}' Recreated");
+			}
 		}
 
 		/// -----------------------------------------------------------------------------------------------------------

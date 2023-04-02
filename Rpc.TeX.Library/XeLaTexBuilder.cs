@@ -2,6 +2,8 @@
 {
 	public class XeLaTexBuilder
 	{
+		public const string EMPTY_SRC_DATA = "*** SECTION MISSING ***";
+
 		private const string kDateField = "DATE";
 
 		private string _markupText;
@@ -22,24 +24,29 @@
 		/// -----------------------------------------------------------------------------------------------------------
 		public void ProcessText(string field, string text)
 		{
-			var pattern = $"<<{field.Trim()}>>";
-
-			if (field.Trim() == "CONFESSION-SIN-ATTRIBUTION-2")
-				_sinConfessionMarkupInfo.HasTwoLineAttribution = true;
-			if (field.Trim() == "CONFESSION-FAITH-ATTRIBUTION-2")
-				_faithConfessionMarkupInfo.HasTwoLineAttribution = true;
-			else if (field.StartsWith("CONFESSION") && !field.Contains("ATTRIBUTION"))
-				text = GetConfessionMarkup(field, text);
-			else if (field.StartsWith("COLLECTION") && text.ToUpper() == "Y")
+			if (field == EMPTY_SRC_DATA)
+				_markupText = EMPTY_SRC_DATA;
+			else
 			{
-				// In this case, we don't want to insert any text in the .tex file, we want to
-				// remove some so the markup becomes active (i.e. not commented out).
-				pattern = "%<<REM-COLLECTION>>";
-				text = string.Empty;
-			}
+                var pattern = $"<<{field.Trim()}>>";
 
-			_markupText = _markupText.Replace(pattern, text.Trim());
-		}
+                if (field.Trim() == "CONFESSION-SIN-ATTRIBUTION-2")
+                    _sinConfessionMarkupInfo.HasTwoLineAttribution = true;
+                if (field.Trim() == "CONFESSION-FAITH-ATTRIBUTION-2")
+                    _faithConfessionMarkupInfo.HasTwoLineAttribution = true;
+                else if (field.StartsWith("CONFESSION") && !field.Contains("ATTRIBUTION"))
+                    text = GetConfessionMarkup(field, text);
+                else if (field.StartsWith("COLLECTION") && text.ToUpper() == "Y")
+                {
+                    // In this case, we don't want to insert any text in the .tex file, we want to
+                    // remove some so the markup becomes active (i.e. not commented out).
+                    pattern = "%<<REM-COLLECTION>>";
+                    text = string.Empty;
+                }
+
+                _markupText = _markupText.Replace(pattern, text.Trim());
+            }
+        }
 
 		/// -----------------------------------------------------------------------------------------------------------
 		private string GetConfessionMarkup(string pattern, string text)

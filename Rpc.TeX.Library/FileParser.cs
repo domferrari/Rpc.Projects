@@ -29,12 +29,17 @@ namespace Rpc.TeX.Library
 		{
 			var sectionContent = GetSection(worshipServiceSection);
 
-			var regEx = new Regex(@"^(?<field>[-()/A-Z1-3]+)\s*:\s*<<\s*(?<text>[^>]+)>>",
-				RegexOptions.Multiline | RegexOptions.Compiled);
+			if (sectionContent == XeLaTexBuilder.EMPTY_SRC_DATA)
+                textProcessor(sectionContent, null);
+			else
+			{
+                var regEx = new Regex(@"^(?<field>[-()/A-Z1-3]+)\s*:\s*<<\s*(?<text>[^>]+)>>",
+                    RegexOptions.Multiline | RegexOptions.Compiled);
 
-			foreach (var match in regEx.Matches(sectionContent).Where(m => m.Success))
-				textProcessor(match.Groups["field"].Value, match.Groups["text"].Value);
-		}
+                foreach (var match in regEx.Matches(sectionContent).Where(m => m.Success))
+                    textProcessor(match.Groups["field"].Value, match.Groups["text"].Value);
+            }
+        }
 
 		/// -----------------------------------------------------------------------------------------------------------
 		private string GetSection(string section)
@@ -46,7 +51,7 @@ namespace Rpc.TeX.Library
 			if (match.Success && match.Groups["bulletin"].Success)
 				return match.Groups["bulletin"].Value;
 
-			throw new Exception($"Section {section} could not be found in file {_pathToFile}");
+			return XeLaTexBuilder.EMPTY_SRC_DATA;
 		}
 	}
 }
